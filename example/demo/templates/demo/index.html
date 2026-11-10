@@ -1,0 +1,29 @@
+{% extends "demo/base.html" %}
+{% block content %}
+<h1>Generated documents</h1>
+<p class="lead">Every template below is rendered from real demo records. Edit templates, shared blocks and
+constants in the <a href="{% url 'admin:index' %}">admin</a> (admin / admin) and reload: changes to a
+block show up in every template that uses it.</p>
+<table class="list">
+  <tr><th>Template</th><th>Type</th><th>Theme</th><th>Render for…</th></tr>
+  {% for row in rows %}
+  <tr>
+    <td><strong>{{ row.template.name }}</strong><br><code>{{ row.template.slug }}</code>
+      {% if row.template.is_default %}<span class="pill">default</span>{% endif %}</td>
+    <td>{{ row.template.type_label }}</td>
+    <td>{{ row.template.theme }}</td>
+    <td>
+      {% for obj in row.objects %}
+        <div class="fmt">{{ obj }}:
+          {% for fmt in row.template.output_formats %}
+            <a href="{% url 'document' row.template.slug obj.pk fmt %}" target="_blank">{{ fmt|upper }}</a>
+          {% endfor %}
+        </div>
+      {% empty %}<em>no records</em>{% endfor %}
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="4">No templates yet: run <code>python manage.py seed_demo</code>.</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

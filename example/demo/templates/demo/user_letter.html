@@ -1,0 +1,19 @@
+{% extends "demo/base.html" %}
+{% block head %}{{ form.media }}{% endblock %}
+{% block content %}
+<h1>Write your own letter</h1>
+<p class="lead">A plain Django form (not the admin) using <code>TemplateEditorWidget(template_type="customer_letter",
+preset="simple", skin="paper")</code>. Saving stores the template and renders it for the chosen customer.</p>
+<form method="post" class="card">{% csrf_token %}
+  {{ form.non_field_errors }}
+  <p>{{ form.customer.label_tag }} {{ form.customer }}</p>
+  {{ form.body.errors }}
+  {{ form.body.label_tag }}{{ form.body }}
+  <p><button class="primary" type="submit">Save &amp; render</button>
+  {% if tpl %}<a href="{% url 'admin:templates_pro_documenttemplate_change' tpl.pk %}">open in admin</a>{% endif %}</p>
+</form>
+{% if output %}
+<h2>Result</h2>
+<iframe class="out" srcdoc="{{ output }}"></iframe>
+{% endif %}
+{% endblock %}

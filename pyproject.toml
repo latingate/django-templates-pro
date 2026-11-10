@@ -1,0 +1,86 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "django-templates-pro"
+dynamic = ["version"]
+description = "WYSIWYG document templates for Django: variables, constants, dynamic values, formatting and shared blocks, rendered to HTML, PDF, DOCX and TXT."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Peltransport" }]
+keywords = ["django", "templates", "wysiwyg", "tiptap", "jinja2", "pdf", "docx", "mail-merge"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+dependencies = [
+    "Django>=4.2",
+    "Jinja2>=3.1",
+    "Babel>=2.12",
+    "html2text>=2024.2.26",
+]
+
+[project.optional-dependencies]
+pdf = ["weasyprint>=60"]
+docx = ["python-docx>=1.1"]
+all = ["weasyprint>=60", "python-docx>=1.1"]
+dev = [
+    "pytest>=8",
+    "pytest-django>=4.8",
+    "weasyprint>=60",
+    "python-docx>=1.1",
+    "nox>=2024.3",
+    "ruff>=0.5",
+]
+
+[project.urls]
+Documentation = "https://github.com/peltransport/django-templates-pro/tree/main/docs"
+Source = "https://github.com/peltransport/django-templates-pro"
+Changelog = "https://github.com/peltransport/django-templates-pro/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "src/templates_pro/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/templates_pro"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "docs", "README.md", "CHANGELOG.md", "LICENSE", "noxfile.py", "requirements*.txt"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+src = ["src", "tests"]
+extend-exclude = ["frontend", "src/templates_pro/migrations"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "DJ"]
+# DJ007: admin ModelForms intentionally expose all fields; DJ012: method order is by topic.
+ignore = ["DJ007", "DJ012"]
+
+[tool.ruff.lint.per-file-ignores]
+"example/**" = ["E501", "DJ008"]
+"tests/**" = ["E501"]

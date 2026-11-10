@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.nox/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+frontend/node_modules/
+example/db.sqlite3
+example/media/
+example/staticfiles/
+.DS_Store
+# NOTE: src/templates_pro/static/templates_pro/editor/ (built bundle) IS committed.

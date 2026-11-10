@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}django-templates-pro demo{% endblock %}</title>
+<style>
+  body { font: 15px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; color: #1f2937; background: #f8fafc; }
+  header { background: #0f766e; color: #fff; padding: 14px 28px; display: flex; gap: 24px; align-items: center; }
+  header a { color: #fff; text-decoration: none; opacity: .9; }
+  header strong { font-size: 17px; margin-right: auto; }
+  main { max-width: 1120px; margin: 0 auto; padding: 28px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  .lead { color: #475569; margin: 0 0 24px; }
+  table.list { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e2e8f0; }
+  table.list th, table.list td { padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: left; vertical-align: top; }
+  table.list th { background: #f1f5f9; font-size: 13px; text-transform: uppercase; letter-spacing: .03em; color: #475569; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; background: #e0f2fe; color: #075985; font-size: 12px; }
+  .fmt a { display: inline-block; margin: 0 4px 4px 0; padding: 2px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; text-decoration: none; color: #0f172a; background: #fff; }
+  .fmt a:hover { border-color: #0f766e; color: #0f766e; }
+  .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; margin-bottom: 22px; }
+  label { display: block; font-weight: 600; margin: 0 0 8px; font-size: 14px; }
+  .errorlist { color: #b91c1c; }
+  button.primary { background: #0f766e; color: #fff; border: 0; border-radius: 8px; padding: 9px 16px; font: inherit; cursor: pointer; }
+  select { font: inherit; padding: 6px 8px; }
+  iframe.out { width: 100%; height: 700px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; }
+  code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+</style>
+{% block head %}{% endblock %}
+</head>
+<body>
+<header>
+  <strong>django-templates-pro · demo</strong>
+  <a href="{% url 'index' %}">Documents</a>
+  <a href="{% url 'editor_gallery' %}">Editor styles</a>
+  <a href="{% url 'user_letter' %}">User-facing editor</a>
+  <a href="{% url 'admin:index' %}">Admin</a>
+</header>
+<main>{% block content %}{% endblock %}</main>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<h2>Thanks for your order, <span data-tp="var" data-path="customer.name">Customer › Contact name</span>!</h2>
+<p>We received order <strong><span data-tp="var" data-path="order.number">Order › Order number</span></strong> on <span data-tp="var" data-path="order.placed_at" data-format='{"kind":"datetime","style":"long"}'>Order › Placed at</span>. It ships via <span data-tp="var" data-path="order.shipping_method">Order › Shipping method</span> and should arrive by <strong><span data-tp="var" data-path="order.estimated_delivery" data-format='{"kind":"date","style":"full"}'>Order › Estimated delivery</span></strong>.</p>
+<h3>Your items (<span data-tp="var" data-path="order.item_count">Order › Number of items</span>)</h3>
+<div data-tp="repeat" data-path="order.items" data-as="item"><p><span data-tp="var" data-path="item.quantity">item › Quantity</span> × <span data-tp="var" data-path="item.product">item › Product</span> — <span data-tp="var" data-path="item.line_total">item › Line total</span></p></div>
+<p><strong>Order total: <span data-tp="var" data-path="order.total">Order › Order total</span></strong></p>
+<hr>
+<p>Questions? Reply to this email or write to <span data-tp="const" data-key="support_email">Support email</span>.</p>
+<p>— <span data-tp="const" data-key="company_name">Company name</span>, <span data-tp="dynamic" data-key="year">Current year</span></p>

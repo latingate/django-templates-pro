@@ -1,0 +1,8 @@
+# Development: tests, test matrix, linting.   pip install -r requirements-dev.txt
+-r requirements.txt
+-e .
+
+pytest>=8
+pytest-django>=4.8
+nox>=2024.3
+ruff>=0.5

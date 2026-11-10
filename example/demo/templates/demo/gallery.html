@@ -1,0 +1,12 @@
+{% extends "demo/base.html" %}
+{% block head %}{{ form.media }}{% endblock %}
+{% block content %}
+<h1>Editor styles</h1>
+<p class="lead">The same widget with different <code>preset</code>, <code>skin</code> and <code>toolbar</code>
+options, used outside the admin. Click a chip to change its formatting; type <code>{{ "{{" }}</code> to insert a field.</p>
+<form method="post">{% csrf_token %}
+  {% for field in form %}
+  <div class="card">{{ field.label_tag }}{{ field }}</div>
+  {% endfor %}
+</form>
+{% endblock %}

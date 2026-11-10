@@ -1,0 +1,6 @@
+<div class="tp-editor-root" data-tp-editor data-tp-config="{{ widget.tp_config_id }}">
+<textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} hidden>
+{% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+<noscript><p>The template editor needs JavaScript.</p></noscript>
+</div>
+{{ widget.tp_config|json_script:widget.tp_config_id }}

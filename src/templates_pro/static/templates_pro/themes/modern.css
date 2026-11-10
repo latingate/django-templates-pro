@@ -1,0 +1,20 @@
+/* Modern: sans-serif, accent colour, airy spacing. Change --tp-accent in extra CSS. */
+:root { --tp-accent: #2563eb; --tp-muted: #64748b; }
+.tp-body { font-family: "Inter", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif;
+  font-size: 10.5pt; line-height: 1.55; color: #0f172a; }
+.tp-document h1 { font-size: 24pt; font-weight: 700; color: var(--tp-accent); margin: 0 0 .4em;
+  letter-spacing: -.01em; }
+.tp-document h2 { font-size: 14pt; font-weight: 700; margin: 1.4em 0 .5em; }
+.tp-document h3 { font-size: 11pt; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--tp-muted); margin: 1.2em 0 .4em; }
+.tp-document p { margin: 0 0 .75em; }
+.tp-document table { margin: 1em 0 1.2em; }
+.tp-document th { background: var(--tp-accent); color: #fff; font-weight: 600; text-align: left;
+  padding: 7px 10px; }
+.tp-document td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; }
+.tp-document blockquote { margin: 1em 0; padding: .6em 1em; background: #eff6ff;
+  border-left: 4px solid var(--tp-accent); }
+.tp-document hr { border: 0; height: 2px; background: #e2e8f0; margin: 1.4em 0; }
+.tp-document a { color: var(--tp-accent); }
+.tp-running-header, .tp-running-footer { color: var(--tp-muted); font-family: inherit; }
+@media screen { .tp-body { max-width: 820px; margin: 2rem auto; padding: 0 1.5rem; } }

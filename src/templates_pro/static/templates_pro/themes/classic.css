@@ -1,0 +1,19 @@
+/* Classic: serif typography, understated rules. */
+.tp-body { font-family: Georgia, "Times New Roman", "DejaVu Serif", serif; font-size: 11pt;
+  line-height: 1.5; color: #1f1f1f; }
+.tp-document h1, .tp-document h2, .tp-document h3 { font-weight: normal; line-height: 1.25;
+  margin: 1.1em 0 .45em; }
+.tp-document h1 { font-size: 22pt; letter-spacing: .02em; }
+.tp-document h2 { font-size: 16pt; border-bottom: 1px solid #c9c2b6; padding-bottom: .15em; }
+.tp-document h3 { font-size: 13pt; font-style: italic; }
+.tp-document p { margin: 0 0 .7em; }
+.tp-document table { margin: .8em 0 1.1em; }
+.tp-document th { text-align: left; font-weight: bold; border-bottom: 1.5px solid #333;
+  padding: 5px 8px; }
+.tp-document td { border-bottom: 1px solid #ddd6ca; padding: 5px 8px; }
+.tp-document blockquote { margin: 1em 0; padding-left: 1em; border-left: 3px solid #c9c2b6;
+  color: #555; font-style: italic; }
+.tp-document hr { border: 0; border-top: 1px solid #c9c2b6; margin: 1.2em 0; }
+.tp-document a { color: #6b3e1d; }
+.tp-running-header, .tp-running-footer { font-family: Georgia, serif; color: #666; }
+@media screen { .tp-body { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; } }
