@@ -31,8 +31,9 @@ stored HTML in a data migration (replace `data-path="old.path"` with
 
 ## Performance
 
-- PDF layout is the expensive part (tens to hundreds of ms per page).
-  Render in a task queue for batches.
+- PDF layout is the expensive part. Typst is fast (typically tens of ms for a
+  page); WeasyPrint is several times slower. Render in a task queue for large
+  batches.
 - Keep `build_context` efficient (`select_related` / `prefetch_related`).
 - Each include of a block costs one indexed query on a cold cache.
 
@@ -50,8 +51,23 @@ only added. `GeneratedDocument.file` uses a callable storage, so changing
 4. `python manage.py collectstatic` (the editor bundle changes between versions)
 5. `python manage.py templates_pro_validate`
 
-Pin a compatible range in each project, e.g. `django-templates-pro>=0.1,<0.2`
+Pin a compatible range in each project, e.g. `django-templates-pro>=0.2,<0.3`
 while the version is below 1.0.
+
+### From 0.1 to 0.2
+
+- `migrate` adds the template **Text direction** field. Existing templates
+  get *Auto*, which only changes anything for templates or objects with a
+  Hebrew/Arabic/Persian/Urdu locale.
+- PDFs are now made by **Typst** by default, so they look slightly different
+  (they use each theme's Typst style). Re-check your templates' PDFs after
+  upgrading. To keep WeasyPrint, install `django-templates-pro[weasyprint]`
+  and set `TEMPLATES_PRO["PDF_ENGINE"] = "weasyprint"`.
+- A project theme from `THEMES` gets the `minimal` Typst style until you add
+  a `"typst"` entry ([rendering.md](rendering.md#themes)).
+- The `[pdf]`, `[docx]` and `[all]` extras are now empty: `typst` and
+  `python-docx` are regular dependencies. You can uninstall WeasyPrint and
+  the Pango libraries if you don't use the WeasyPrint engine.
 
 ## Backups and portability
 

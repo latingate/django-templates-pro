@@ -9,7 +9,7 @@
   letter-spacing: .06em; color: var(--tp-muted); margin: 1.2em 0 .4em; }
 .tp-document p { margin: 0 0 .75em; }
 .tp-document table { margin: 1em 0 1.2em; }
-.tp-document th { background: var(--tp-accent); color: #fff; font-weight: 600; text-align: left;
+.tp-document th { background: var(--tp-accent); color: #fff; font-weight: 600; text-align: start;
   padding: 7px 10px; }
 .tp-document td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; }
 .tp-document blockquote { margin: 1em 0; padding: .6em 1em; background: #eff6ff;
@@ -18,3 +18,4 @@
 .tp-document a { color: var(--tp-accent); }
 .tp-running-header, .tp-running-footer { color: var(--tp-muted); font-family: inherit; }
 @media screen { .tp-body { max-width: 820px; margin: 2rem auto; padding: 0 1.5rem; } }
+[dir=rtl] .tp-document blockquote { border-left: 0; border-right: 4px solid var(--tp-accent); }

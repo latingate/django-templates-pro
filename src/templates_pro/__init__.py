@@ -6,7 +6,7 @@ Public API (import from here or from :mod:`templates_pro.services`)::
     from templates_pro.services import render, render_to_response, generate
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = ["register", "TemplateType", "Var", "Group", "ListOf", "__version__"]
 

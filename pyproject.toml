@@ -5,13 +5,13 @@ build-backend = "hatchling.build"
 [project]
 name = "django-templates-pro"
 dynamic = ["version"]
-description = "WYSIWYG document templates for Django: variables, constants, dynamic values, formatting and shared blocks, rendered to HTML, PDF, DOCX and TXT."
+description = "WYSIWYG document templates for Django: variables, constants, dynamic values, formatting and shared blocks, rendered to HTML, PDF, DOCX and TXT, with right-to-left (Hebrew, Arabic) support. Pure pip: no system libraries."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [{ name = "Peltransport" }]
-keywords = ["django", "templates", "wysiwyg", "tiptap", "jinja2", "pdf", "docx", "mail-merge"]
+keywords = ["django", "templates", "wysiwyg", "tiptap", "jinja2", "pdf", "docx", "typst", "rtl", "hebrew", "mail-merge"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Web Environment",
@@ -30,22 +30,27 @@ classifiers = [
     "Topic :: Office/Business",
     "Topic :: Text Processing :: Markup :: HTML",
 ]
+# Every dependency ships as a wheel for Windows, macOS and Linux: no system libraries.
 dependencies = [
     "Django>=4.2",
     "Jinja2>=3.1",
     "Babel>=2.12",
     "html2text>=2024.2.26",
+    "typst>=0.13",        # PDF engine (compiler bundled in the wheel)
+    "python-docx>=1.1",   # DOCX output
 ]
 
 [project.optional-dependencies]
-pdf = ["weasyprint>=60"]
-docx = ["python-docx>=1.1"]
-all = ["weasyprint>=60", "python-docx>=1.1"]
+# Optional second PDF engine (full CSS). Needs the Pango system library.
+weasyprint = ["weasyprint>=60"]
+# Kept so 0.1.x install commands keep working; PDF and DOCX are now always included.
+pdf = []
+docx = []
+all = []
 dev = [
     "pytest>=8",
     "pytest-django>=4.8",
-    "weasyprint>=60",
-    "python-docx>=1.1",
+    "pypdf>=4",
     "nox>=2024.3",
     "ruff>=0.5",
 ]
@@ -62,7 +67,7 @@ path = "src/templates_pro/__init__.py"
 packages = ["src/templates_pro"]
 
 [tool.hatch.build.targets.sdist]
-include = ["src", "tests", "docs", "README.md", "CHANGELOG.md", "LICENSE", "noxfile.py", "requirements*.txt"]
+include = ["src", "tests", "docs", "frontend/src", "frontend/scripts", "frontend/package.json", "frontend/package-lock.json", "frontend/vite.config.js", "frontend/README.md", "example", "README.md", "SETUP.md", "CHANGELOG.md", "LICENSE", "noxfile.py", "requirements*.txt"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
@@ -77,10 +82,13 @@ src = ["src", "tests"]
 extend-exclude = ["frontend", "src/templates_pro/migrations"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "B", "UP", "DJ"]
+preview = true
+explicit-preview-rules = true
+select = ["E", "F", "I", "B", "UP", "DJ", "PLW1514"]  # PLW1514: always pass encoding=
 # DJ007: admin ModelForms intentionally expose all fields; DJ012: method order is by topic.
 ignore = ["DJ007", "DJ012"]
 
 [tool.ruff.lint.per-file-ignores]
 "example/**" = ["E501", "DJ008"]
 "tests/**" = ["E501"]
+"src/templates_pro/__init__.py" = ["F822"]  # lazy re-exports via __getattr__

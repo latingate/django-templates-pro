@@ -59,6 +59,8 @@ class Command(BaseCommand):
             tpl.is_default = t.get("is_default", False)
             tpl.margin = t.get("margin", "20mm")
             tpl.extra_css = t.get("extra_css", "")
+            tpl.locale = t.get("locale", "")
+            tpl.direction = t.get("direction", "auto")
             tpl.footer_block = TemplateBlock.objects.filter(slug=t.get("footer")).first()
             tpl.header_block = TemplateBlock.objects.filter(slug=t.get("header")).first()
             tpl.body = (SAMPLES / "templates" / f"{t['slug']}.html").read_text(encoding="utf-8")
@@ -67,6 +69,8 @@ class Command(BaseCommand):
 
         if not Customer.objects.exists():
             self.sample_data()
+        if not Customer.objects.filter(language="he_IL").exists():
+            self.hebrew_data()
 
         User = get_user_model()
         if not User.objects.filter(username="admin").exists():
@@ -123,6 +127,26 @@ class Command(BaseCommand):
         OrderItem.objects.create(order=order2, product="Desk organiser, oak", quantity=1,
                                  price=Decimal("64.00"))
 
+        self._employees()
+
+    def hebrew_data(self):
+        """A Hebrew-speaking customer with an ILS invoice (for the RTL template)."""
+        yael = Customer.objects.create(
+            name="יעל כהן", company="כהן ושות' בע\"מ", email="yael@cohen.example",
+            address="רחוב הרצל 12", city="תל אביב", country="ישראל", vat_id="515555555",
+            language="he_IL")
+        date = dt.date.today() - dt.timedelta(days=8)
+        inv = Invoice.objects.create(customer=yael, number="INV-2026-0046", date=date,
+                                     due_date=date + dt.timedelta(days=30), currency="ILS",
+                                     tax_rate=Decimal("0.18"), discount=Decimal("0.10"),
+                                     notes="תודה על שיתוף הפעולה!")
+        for desc, qty, price in [("סדנת מיתוג (חצי יום)", "1", "3200"),
+                                 ("עיצוב לוגו ושפה גרפית", "1", "4800"),
+                                 ("קבצים לדפוס", "4", "350")]:
+            InvoiceLine.objects.create(invoice=inv, description=desc, quantity=Decimal(qty),
+                                       unit_price=Decimal(price))
+
+    def _employees(self):
         Employee.objects.create(first_name="Alex", last_name="Morgan", position="Senior Designer",
                                 department="Studio", start_date=dt.date(2021, 9, 1))
         Employee.objects.create(first_name="Priya", last_name="Shah", position="Project Manager",

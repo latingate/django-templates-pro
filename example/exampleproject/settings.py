@@ -62,11 +62,23 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 TEMPLATES_PRO = {
     "DEFAULT_CURRENCY": "GBP",
     "DEFAULT_LOCALE": "en_GB",
+    "PDF_ENGINE": "typst",  # the default; "weasyprint" is optional and needs Pango
     "OUTPUT_FORMATS": ["html", "pdf", "docx", "txt"],
     "DEFAULT_OUTPUT_FORMATS": ["html", "pdf", "docx"],
     "DEFAULT_THEME": "classic",
     # A project-specific theme next to the built-in ones:
-    "THEMES": {"northwind": {"label": "Northwind brand", "css": "demo/northwind-theme.css"}},
+    # It has a CSS file (HTML output) and a Typst style (PDF output) based on "classic".
+    "THEMES": {"northwind": {
+        "label": "Northwind brand",
+        "css": "demo/northwind-theme.css",
+        "typst": {
+            "base": "classic",
+            "h1-color": 'rgb("#0f766e")', "heading-color": 'rgb("#0f766e")',
+            "h1-weight": '"bold"', "h1-size": "17pt",
+            "th-fill": 'rgb("#0f766e")', "th-fg": 'rgb("#ffffff")', "th-line": "none",
+            "row-line": '0.6pt + rgb("#d1e7e4")', "link": 'rgb("#0f766e")',
+        },
+    }},
     # Constants computed in code, merged with the ones edited in the admin:
     "CONSTANTS_PROVIDER": "demo.constants.provide",
     "EDITOR": {"preset": "full", "skin": "default", "height": 480},

@@ -18,8 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - name: System libraries for WeasyPrint
-        run: sudo apt-get update && sudo apt-get install -y libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0
+      # No system libraries: PDF output uses the typst wheel and bundled fonts.
       - name: Install
         run: |
           pip install "Django~=${{ matrix.django }}.0"

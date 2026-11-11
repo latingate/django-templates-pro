@@ -3,10 +3,15 @@ from __future__ import annotations
 from . import Renderer, RendererUnavailable, RenderInput, build_document_html
 
 
-class PdfRenderer(Renderer):
-    """PDF via WeasyPrint (``pip install django-templates-pro[pdf]``)."""
+class WeasyPrintRenderer(Renderer):
+    """PDF via WeasyPrint: full CSS, but needs the Pango system library.
+
+    Optional (``pip install django-templates-pro[weasyprint]``); enable it with
+    ``TEMPLATES_PRO["PDF_ENGINE"] = "weasyprint"``. The default engine is Typst.
+    """
 
     name = "pdf"
+    engine = "weasyprint"
     mimetype = "application/pdf"
     extension = "pdf"
     label = "PDF"
@@ -23,8 +28,8 @@ class PdfRenderer(Renderer):
             from weasyprint import HTML
         except (ImportError, OSError) as exc:
             raise RendererUnavailable(
-                "PDF output needs WeasyPrint: pip install 'django-templates-pro[pdf]' "
-                "(and its system libraries, see the WeasyPrint docs)."
+                "PDF_ENGINE 'weasyprint' needs WeasyPrint and its Pango system library: "
+                "pip install 'django-templates-pro[weasyprint]', or use the default Typst engine."
             ) from exc
         kwargs = {"string": build_document_html(doc, for_print=True)}
         if doc.base_url:
@@ -54,3 +59,7 @@ def adapt_fetcher(func):
             return URLFetcherResponse(res.get("redirected_url") or url, body=body, headers=hdrs)
 
     return _Adapter()
+
+
+# Backwards-compatible name (0.1.x).
+PdfRenderer = WeasyPrintRenderer

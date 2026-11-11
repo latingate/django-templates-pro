@@ -64,7 +64,7 @@ def test_admin_save_via_form(admin_client):
         "body": '<p><span data-tp="var" data-path="invoice.number">n</span></p>',
         "output_formats": ["html", "pdf"], "theme": "classic", "locale": "",
         "filename_pattern": "", "page_size": "A4", "orientation": "portrait", "margin": "20mm",
-        "extra_css": "", "is_active": "on",
+        "extra_css": "", "is_active": "on", "direction": "auto",
     })
     assert r.status_code == 302, r.content.decode()[:2000]
     assert DocumentTemplate.objects.get(slug="inv").variables == ["invoice.number"]

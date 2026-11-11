@@ -4,5 +4,6 @@
 
 pytest>=8
 pytest-django>=4.8
+pypdf>=4
 nox>=2024.3
 ruff>=0.5

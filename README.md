@@ -9,8 +9,11 @@ rich-text editor (TipTap). The templates can contain:
 - **formatting** for dates, times, numbers, money, percentages and text, chosen per chip
 - **shared blocks** (header, footer, customer details…), edited once and used everywhere
 - **repeat sections / repeated table rows** (invoice lines) and **conditions**
+- **text direction** per template (auto from the locale, LTR or RTL), in the editor and every output
 
-Templates render to **HTML, PDF (WeasyPrint), DOCX (python-docx) and TXT**.
+Templates render to **HTML, PDF (Typst), DOCX (python-docx) and TXT**, with
+full **right-to-left** support (Hebrew, Arabic…). Everything installs with
+pip alone: no system libraries, on Windows, macOS and Linux.
 
 Users never write template syntax. The editor stores HTML with chips, and the
 package compiles it to **sandboxed Jinja2**. Contexts must be plain data, so
@@ -27,7 +30,7 @@ def invoice_pdf(request, pk):
 ## Install
 
 ```bash
-pip install "django-templates-pro[pdf,docx]"      # or just django-templates-pro for HTML/TXT
+pip install django-templates-pro      # HTML, PDF, DOCX and TXT; nothing else to install
 ```
 
 ```python
@@ -39,6 +42,11 @@ path("templates-pro/", include("templates_pro.urls")),
 ```bash
 python manage.py migrate
 ```
+
+Want something to look at first? Add `"templates_pro.samples"` to `INSTALLED_APPS` and run
+`python manage.py templates_pro_samples`: six ready-made templates (one Hebrew, right-to-left),
+seven shared blocks and constants appear in the admin, with working previews
+([sample content](docs/quickstart.md#start-from-the-samples-optional)).
 
 Then declare what can be templated, in any app's `doctemplate_types.py`:
 
@@ -71,8 +79,9 @@ class InvoiceTemplate(TemplateType):
 
 Open **Admin → Document templates**, pick the type, and write.
 
-Requirements: Python 3.10+ and Django 4.2+. PDF output needs WeasyPrint and its system
-libraries (Pango).
+Requirements: Python 3.10+ and Django 4.2+. That's all: PDF output uses the
+`typst` wheel and bundled fonts (Latin + Hebrew). WeasyPrint is available as an
+optional PDF engine ([rendering.md](docs/rendering.md#pdf-engines)).
 
 ## Try the demo
 
@@ -82,14 +91,16 @@ python manage.py migrate && python manage.py seed_demo
 python manage.py runserver        # http://127.0.0.1:8000  (admin / admin)
 ```
 
-The demo has five templates (two invoices, a letter, an order email and an HR
-certificate), six shared blocks (one of them nested), constants, four document
-themes, every editor preset and skin, and a user-facing editor page.
+The demo has six templates (an English and a Hebrew right-to-left invoice, a
+modern invoice, a letter, an order email and an HR certificate), seven shared
+blocks (one of them nested), constants, document themes (one of them a
+project theme), every editor preset and skin, and a user-facing editor page.
 
 ## Documentation
 
 | | |
 |---|---|
+| [**Setup guide**](SETUP.md) | step-by-step local setup, demo, PyCharm, Windows PDF, troubleshooting |
 | [Installation](docs/installation.md) | requirements, settings, URLs, system libraries |
 | [Quickstart](docs/quickstart.md) | first template type, first template, first PDF |
 | [Concepts](docs/concepts.md) | variables, constants, dynamic values, blocks, repeats, conditions |

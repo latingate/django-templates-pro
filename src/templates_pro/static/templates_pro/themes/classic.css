@@ -8,7 +8,7 @@
 .tp-document h3 { font-size: 13pt; font-style: italic; }
 .tp-document p { margin: 0 0 .7em; }
 .tp-document table { margin: .8em 0 1.1em; }
-.tp-document th { text-align: left; font-weight: bold; border-bottom: 1.5px solid #333;
+.tp-document th { text-align: start; font-weight: bold; border-bottom: 1.5px solid #333;
   padding: 5px 8px; }
 .tp-document td { border-bottom: 1px solid #ddd6ca; padding: 5px 8px; }
 .tp-document blockquote { margin: 1em 0; padding-left: 1em; border-left: 3px solid #c9c2b6;
@@ -17,3 +17,4 @@
 .tp-document a { color: #6b3e1d; }
 .tp-running-header, .tp-running-footer { font-family: Georgia, serif; color: #666; }
 @media screen { .tp-body { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; } }
+[dir=rtl] .tp-document blockquote { border-left: 0; padding-left: 0; border-right: 3px solid #c9c2b6; padding-right: 1em; }

@@ -22,6 +22,10 @@ DEFAULTS: dict[str, Any] = {
     "DEFAULT_THEME": "classic",
     "THEMES": {},  # extra themes: {"brand": {"label": "Brand", "css": "app/themes/brand.css"}}
     "DEFAULT_PAGE_SIZE": "A4",
+    # PDF engine: "typst" (default; pure pip, full RTL) or "weasyprint" (full CSS; needs Pango)
+    "PDF_ENGINE": "typst",
+    "TYPST_FONT_PATHS": [],  # extra font folders for Typst (bundled Noto Sans/Hebrew always on)
+    "TYPST_IGNORE_SYSTEM_FONTS": False,  # True = only bundled + TYPST_FONT_PATHS (reproducible)
     "DEFAULT_MARGIN": "20mm",
     # Data
     "CONSTANTS_PROVIDER": None,  # dotted path to callable(request=None) -> dict
@@ -69,9 +73,10 @@ tp_settings = _Settings()
 
 def _reset(**kwargs):
     if kwargs.get("setting") == "TEMPLATES_PRO":
-        from . import themes
+        from . import engines, themes
 
         themes.clear_cache()
+        engines.configure()
 
 
 setting_changed.connect(_reset)

@@ -30,7 +30,7 @@ from django.utils.module_loading import import_string
 from .conf import tp_settings
 from .core import engine
 from .core.compiler import compile_html
-from .core.formatting import normalize_locale
+from .core.formatting import direction_for, normalize_locale
 from .core.renderers import PageSettings, RenderInput, get_renderer
 from .fetchers import BASE_URL, get_url_fetcher
 from .themes import theme_css
@@ -216,6 +216,8 @@ class RenderedDocument:
 
 def _build_input(template, body, header, footer, locale, fmt) -> RenderInput:
     return RenderInput(
+        direction=direction_for(locale, getattr(template, "direction", "auto") or "auto"),
+        theme=template.theme or "",
         body_html=body,
         header_html=header,
         footer_html=footer,
@@ -223,7 +225,7 @@ def _build_input(template, body, header, footer, locale, fmt) -> RenderInput:
         css=theme_css(template.theme) + "\n" + (template.extra_css or ""),
         page=PageSettings(size=template.page_size, orientation=template.orientation,
                           margin=template.margin or "20mm"),
-        lang=locale.split("_")[0],
+        lang=locale.split("_")[0].lower(),
         base_url=BASE_URL,
         url_fetcher=get_url_fetcher(fmt),
     )
@@ -304,8 +306,8 @@ class _Unsaved:
 def preview_document(body: str, template_type: str, *, fmt: str = "html", theme: str | None = None,
                      header_block=None, footer_block=None, page_size: str = "A4",
                      orientation: str = "portrait", margin: str = "20mm", extra_css: str = "",
-                     locale: str | None = None, request=None) -> tuple[RenderedDocument | None,
-                                                                         list[str]]:
+                     locale: str | None = None, direction: str = "auto",
+                     request=None) -> tuple[RenderedDocument | None, list[str]]:
     """Render unsaved editor HTML with sample data. Returns (document, errors)."""
     from .models import TemplateBlock
     from .registry import UnknownTemplateType, get_type
@@ -334,6 +336,7 @@ def preview_document(body: str, template_type: str, *, fmt: str = "html", theme:
         theme=theme or tp_settings.DEFAULT_THEME, extra_css=extra_css, page_size=page_size,
         orientation=orientation, margin=margin, header_block=block(header_block),
         footer_block=block(footer_block), locale=locale or "", filename_pattern="preview",
+        direction=direction if direction in ("auto", "ltr", "rtl") else "auto",
     )
     data = ttype.sample_context() if ttype else {}
     loc = _locale_for(tpl, None, locale)

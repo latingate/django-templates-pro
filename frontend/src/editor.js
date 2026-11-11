@@ -145,6 +145,7 @@ export class TemplateEditor {
     })
     this.buildToolbar(c.toolbar || PRESETS[preset])
     this.watchTypeFields()
+    this.applyDirection()
     // Node views render before `this.editor` exists; re-render them now that
     // scopes (repeat sections, repeated rows) can be resolved.
     this.refreshViews()
@@ -207,10 +208,34 @@ export class TemplateEditor {
 
   watchTypeFields() {
     const names = [this.config.typeField, this.config.typesField].filter(Boolean)
-    if (!names.length || !this.form) return
-    this.form.addEventListener('change', (e) => {
+    const dirNames = [this.config.directionField, this.config.localeField].filter(Boolean)
+    if (!this.form || (!names.length && !dirNames.length)) return
+    const handler = (e) => {
       if (names.includes(e.target.name)) this.refreshViews()
-    })
+      if (dirNames.includes(e.target.name)) this.applyDirection()
+    }
+    this.form.addEventListener('change', handler)
+    this.form.addEventListener('input', handler)
+  }
+
+  // ------------------------------------------------------------- direction
+  direction() {
+    const fromField = this.config.directionField && this.fieldValue(this.config.directionField)
+    const dir = (Array.isArray(fromField) ? fromField[0] : fromField) || this.config.direction || 'auto'
+    if (dir === 'ltr' || dir === 'rtl') return dir
+    const loc = (this.config.localeField && this.fieldValue(this.config.localeField)) ||
+      (this.config.formats && this.config.formats.locale) || ''
+    const lang = String(Array.isArray(loc) ? loc[0] : loc).replace('-', '_').split('_')[0].toLowerCase()
+    return (this.config.rtlLanguages || ['he', 'ar', 'fa', 'ur', 'yi']).includes(lang) ? 'rtl' : 'ltr'
+  }
+
+  applyDirection() {
+    const dir = this.direction()
+    if (this._dir === dir) return
+    this._dir = dir
+    this.editor.setOptions({ editorProps: { ...this.editor.options.editorProps, attributes: { dir } } })
+    this.shell.classList.toggle('tp-rtl', dir === 'rtl')
+    this.updateStatus()
   }
 
   refreshViews() {
@@ -348,10 +373,11 @@ export class TemplateEditor {
     const invalid = this.shell.querySelectorAll('.tp-chip--invalid, .tp-section--invalid, .tp-blocknode--missing').length
     const types = this.activeTypes().map((t) => t.label).join(', ')
     this.status.innerHTML = ''
-    this.status.append(
+    this.status.append(...[
       h('span', { class: 'tp-status__types' }, types ? `Fields from: ${types}` : 'No template type selected'),
+      this._dir === 'rtl' ? h('span', { class: 'tp-status__dir' }, 'Right to left') : null,
       h('span', { class: 'tp-status__hint' }, 'Type {{ to insert a field'),
-    )
+    ].filter(Boolean))
     if (invalid) this.status.append(h('span', { class: 'tp-status__error' }, `${invalid} item(s) need attention`))
   }
 
@@ -1027,6 +1053,7 @@ export class TemplateEditor {
       margin: field('margin') || '',
       extra_css: field('extra_css') || '',
       locale: field('locale') || '',
+      direction: field('direction') || this.config.direction || 'auto',
       fmt,
     }
     const modal = h('div', { class: `tp-modal tp-skin-${this.config.skin || 'default'}` })

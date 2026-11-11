@@ -5,7 +5,7 @@
   text-transform: uppercase; color: var(--nw-teal); font-size: 17pt; margin: 1.2em 0 1em; }
 .tp-document h2, .tp-document h3 { font-family: "DejaVu Sans", Arial, sans-serif; color: var(--nw-teal); }
 .tp-document p { margin: 0 0 .8em; }
-.tp-document th { background: var(--nw-teal); color: #fff; padding: 6px 9px; text-align: left; }
+.tp-document th { background: var(--nw-teal); color: #fff; padding: 6px 9px; text-align: start; }
 .tp-document td { border-bottom: 1px solid #d1e7e4; padding: 6px 9px; }
 .tp-running-footer { color: #6b7280; border-top: 2px solid var(--nw-teal); padding-top: 2mm; }
 @media screen { .tp-body { max-width: 800px; margin: 2rem auto; padding: 0 1.5rem; } }

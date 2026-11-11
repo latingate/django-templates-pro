@@ -27,7 +27,8 @@ class DocumentTemplateForm(forms.ModelForm):
         model = DocumentTemplate
         fields = "__all__"
         widgets = {
-            "body": TemplateEditorWidget(type_field="template_type"),
+            "body": TemplateEditorWidget(type_field="template_type", direction_field="direction",
+                                         locale_field="locale"),
             "extra_css": forms.Textarea(attrs={"rows": 4, "style": "font-family: monospace"}),
         }
 

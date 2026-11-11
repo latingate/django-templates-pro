@@ -14,6 +14,9 @@ Options:
 ``types_field``    name of a multi-select field of type keys (used by blocks)
 ``height``         editor height in px
 ``preview``        show the Preview button (needs templates_pro.urls)
+``direction``      "ltr" | "rtl" | "auto" (auto: by the locale)
+``direction_field`` name of a form field holding the direction (editor follows it)
+``locale_field``   name of a form field holding the locale (used when direction is auto)
 ``toolbar``        explicit list of toolbar items, overriding the preset
 """
 
@@ -35,7 +38,7 @@ COMMON_CURRENCIES = ["USD", "EUR", "GBP", "ILS", "CHF", "JPY", "CAD", "AUD", "SE
 
 def editor_config(*, preset=None, skin=None, template_type=None, type_field=None,
                   types_field=None, height=None, preview=True, toolbar=None,
-                  placeholder="") -> dict:
+                  placeholder="", direction=None, direction_field=None, locale_field=None) -> dict:
     """Build the JSON config the editor bundle reads (also usable from your own JS pages)."""
     from .models import SiteConstant, TemplateBlock
     from .registry import all_types
@@ -58,6 +61,7 @@ def editor_config(*, preset=None, skin=None, template_type=None, type_field=None
         {"key": c.key, "label": c.label, "value": c.value}
         for c in SiteConstant.objects.filter(is_active=True).only("key", "label", "value")
     ]
+    from .core.formatting import RTL_LANGUAGES
     from .services import get_constants
 
     db_keys = {c["key"] for c in constants}
@@ -72,6 +76,10 @@ def editor_config(*, preset=None, skin=None, template_type=None, type_field=None
         "toolbar": toolbar,
         "placeholder": str(placeholder or ""),
         "templateType": template_type,
+        "direction": direction or "auto",
+        "directionField": direction_field,
+        "localeField": locale_field,
+        "rtlLanguages": sorted(RTL_LANGUAGES),
         "typeField": type_field,
         "typesField": types_field,
         "previewUrl": preview_url,
@@ -97,11 +105,14 @@ class TemplateEditorWidget(forms.Textarea):
     template_name = "templates_pro/widgets/editor.html"
 
     def __init__(self, attrs=None, *, preset=None, skin=None, template_type=None, type_field=None,
-                 types_field=None, height=None, preview=True, toolbar=None, placeholder=""):
+                 types_field=None, height=None, preview=True, toolbar=None, placeholder="",
+                 direction=None, direction_field=None, locale_field=None):
         super().__init__(attrs)
         self.options = dict(preset=preset, skin=skin, template_type=template_type,
                             type_field=type_field, types_field=types_field, height=height,
-                            preview=preview, toolbar=toolbar, placeholder=placeholder)
+                            preview=preview, toolbar=toolbar, placeholder=placeholder,
+                            direction=direction, direction_field=direction_field,
+                            locale_field=locale_field)
 
     class Media:
         js = [EDITOR_JS]

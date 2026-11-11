@@ -10,31 +10,53 @@
 ## Install the package
 
 ```bash
-pip install django-templates-pro              # HTML + TXT output
-pip install "django-templates-pro[pdf]"       # + PDF (WeasyPrint)
-pip install "django-templates-pro[docx]"      # + Word (python-docx)
-pip install "django-templates-pro[all]"       # everything
+pip install django-templates-pro
 ```
+
+That's all: HTML, **PDF**, DOCX and TXT output work right away, on Windows,
+macOS and Linux. Every dependency ships as a wheel, so no system libraries are
+needed:
+
+| Package | For |
+|---|---|
+| Django, Jinja2, Babel, html2text | core, formatting, TXT |
+| `typst` | PDF (the Typst compiler is bundled in the wheel) |
+| `python-docx` | DOCX |
+
+Fonts with Latin and Hebrew characters (Noto Sans, Noto Sans Hebrew) are
+bundled in the package. Typst also bundles Libertinus Serif. So Hebrew and
+other right-to-left documents render correctly even on a bare server.
 
 From a private Git repository:
 
 ```bash
-pip install "django-templates-pro[all] @ git+ssh://git@github.com/<you>/django-templates-pro.git@v0.1.0"
+pip install "django-templates-pro @ git+ssh://git@github.com/<you>/django-templates-pro.git@v0.2.0"
 ```
 
-### WeasyPrint system libraries
+The extras `[pdf]`, `[docx]` and `[all]` from 0.1 still work, but they no
+longer add anything: PDF and DOCX are always included.
 
-WeasyPrint needs Pango (and HarfBuzz) from the OS:
+### Optional: WeasyPrint as the PDF engine
 
-| OS | Command |
+The default PDF engine is Typst. If you need full CSS layout in PDFs, you can
+switch to WeasyPrint instead. That engine needs the Pango system library:
+
+```bash
+pip install "django-templates-pro[weasyprint]"
+```
+
+| OS | System library |
 |---|---|
 | Debian / Ubuntu | `apt install libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz-subset0` |
-| Alpine | `apk add pango` |
 | macOS | `brew install pango` |
-| Windows | follow the WeasyPrint documentation (MSYS2) |
+| Windows | MSYS2: `pacman -S mingw-w64-x86_64-pango`, then set `WEASYPRINT_DLL_DIRECTORIES=C:\msys64\mingw64\bin` |
 
-If the libraries are missing, `manage.py check` reports `templates_pro.W001`
-and PDF rendering raises `RendererUnavailable`. Everything else keeps working.
+```python
+TEMPLATES_PRO = {"PDF_ENGINE": "weasyprint"}
+```
+
+If Pango is missing, `manage.py check` reports `templates_pro.W001`. See
+[rendering.md](rendering.md#pdf-engines) to choose between the engines.
 
 ## Configure Django
 
@@ -70,11 +92,16 @@ Then:
 
 ```bash
 python manage.py migrate
-python manage.py check          # reports missing optional libraries, unknown themes...
+python manage.py check          # reports unknown themes, misconfigured engines...
 ```
 
 The admin is registered automatically: **Document templates**, **Blocks**,
 **Constants** and **Generated documents**.
+
+A new install has no content. To get ready-made templates, blocks and
+constants, add `"templates_pro.samples"` to `INSTALLED_APPS` and run
+`python manage.py templates_pro_samples`; see
+[quickstart.md](quickstart.md#start-from-the-samples-optional).
 
 ## Upgrading
 

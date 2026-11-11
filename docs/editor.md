@@ -51,6 +51,9 @@ does this. For your own storage, use
 | `height` | px | minimum height |
 | `preview` | `True` / `False` | Preview button (needs `templates_pro.urls`) |
 | `placeholder` | text | empty-editor hint |
+| `direction` | `"auto"` (default), `"ltr"`, `"rtl"` | text direction; *auto* follows the locale |
+| `direction_field` | form field name | direction follows that field (the admin uses `direction`) |
+| `locale_field` | form field name | locale used when direction is *auto* (the admin uses `locale`) |
 
 Project-wide defaults go in `TEMPLATES_PRO["EDITOR"]`, e.g.
 `{"preset": "simple", "skin": "paper", "height": 500}`.
@@ -85,6 +88,23 @@ TemplateEditorWidget(toolbar=["bold", "italic", "|", "variable", "dynamic", ">",
 - **Preview** renders the unsaved content with sample data as HTML, PDF or TXT.
 - Problems such as unknown fields or missing blocks are shown in red, and the
   status bar counts them.
+
+## Right-to-left (Hebrew, Arabic…)
+
+The writing surface follows the document's direction: set the template's
+*Text direction* to *Right to left*, or leave it on *Auto* with a Hebrew or
+Arabic *Locale*. The editor flips at once when either field changes, and the
+status bar shows "Right to left". For your own forms:
+
+```python
+TemplateEditorWidget(template_type="customer_letter", direction="rtl")
+# or follow fields of the same form:
+TemplateEditorWidget(type_field="kind", direction_field="direction", locale_field="locale")
+```
+
+Each paragraph takes the direction of its first letter, exactly as in the
+rendered documents; chips (field labels) don't count. The editor's own
+toolbar, menus and popovers stay left-to-right and in English.
 
 ## Styling
 

@@ -1,0 +1,126 @@
+{
+  "constants": [
+    {"key": "company_name", "label": "Company name", "value": "Northwind Studio Ltd"},
+    {"key": "company_address", "label": "Company address", "value": "4 Canal Wharf, Leeds LS11 5PS"},
+    {"key": "company_phone", "label": "Phone", "value": "+44 113 496 0000"},
+    {"key": "company_email", "label": "Email", "value": "hello@northwind.example"},
+    {"key": "website_url", "label": "Website", "value": "northwind.example"},
+    {"key": "support_email", "label": "Support email", "value": "support@northwind.example"},
+    {"key": "vat_number", "label": "VAT number", "value": "GB 999 9999 73"},
+    {"key": "bank_name", "label": "Bank name", "value": "Example Bank plc"},
+    {"key": "bank_iban", "label": "IBAN", "value": "GB00 EXMP 0000 0000 0000 00"},
+    {"key": "bank_bic", "label": "BIC", "value": "EXMPGB2L"}
+  ],
+  "blocks": [
+    {
+      "slug": "sample-company-letterhead",
+      "name": "Sample: Company letterhead",
+      "category": "header",
+      "types": [],
+      "description": "Logo and company contact details; uses constants only, so every type can use it."
+    },
+    {
+      "slug": "sample-page-footer",
+      "name": "Sample: Page footer",
+      "category": "footer",
+      "types": [],
+      "description": "Repeated at the bottom of every PDF/DOCX page, with page numbers."
+    },
+    {
+      "slug": "sample-customer-details",
+      "name": "Sample: Customer details",
+      "category": "content",
+      "types": ["sample_invoice", "sample_letter", "sample_order"],
+      "description": "Address block; works for every type that has a Customer group."
+    },
+    {
+      "slug": "sample-bank-details",
+      "name": "Sample: Bank details",
+      "category": "content",
+      "types": [],
+      "description": "Payment details (constants). Included inside 'Payment terms'."
+    },
+    {
+      "slug": "sample-payment-terms",
+      "name": "Sample: Payment terms",
+      "category": "content",
+      "types": ["sample_invoice"],
+      "description": "Paid / due message; nests the Bank details block."
+    },
+    {
+      "slug": "sample-signature",
+      "name": "Sample: Signature",
+      "category": "signature",
+      "types": [],
+      "description": "Closing lines used by letters and invoices."
+    },
+    {
+      "slug": "sample-page-footer-he",
+      "name": "Sample: Page footer (Hebrew)",
+      "category": "footer",
+      "types": [],
+      "description": "Hebrew page footer with page X of Y, for right-to-left templates."
+    }
+  ],
+  "templates": [
+    {
+      "slug": "sample-invoice-standard",
+      "name": "Sample: Invoice (standard)",
+      "type": "sample_invoice",
+      "theme": "classic",
+      "formats": ["html", "pdf", "docx", "txt"],
+      "footer": "sample-page-footer",
+      "is_default": true,
+      "margin": "18mm 18mm 22mm 18mm"
+    },
+    {
+      "slug": "sample-invoice-modern",
+      "name": "Sample: Invoice (modern)",
+      "type": "sample_invoice",
+      "theme": "modern",
+      "formats": ["html", "pdf"],
+      "footer": "sample-page-footer",
+      "margin": "16mm",
+      "extra_css": ":root { --tp-accent: #0f766e; }"
+    },
+    {
+      "slug": "sample-invoice-hebrew",
+      "name": "Sample: Invoice (Hebrew, RTL)",
+      "type": "sample_invoice",
+      "theme": "modern",
+      "formats": ["html", "pdf", "docx", "txt"],
+      "footer": "sample-page-footer-he",
+      "locale": "he_IL",
+      "direction": "rtl",
+      "margin": "16mm",
+      "extra_css": ":root { --tp-accent: #0f766e; }"
+    },
+    {
+      "slug": "sample-welcome-letter",
+      "name": "Sample: Welcome letter",
+      "type": "sample_letter",
+      "theme": "corporate",
+      "formats": ["html", "pdf", "docx"],
+      "footer": "sample-page-footer",
+      "is_default": true
+    },
+    {
+      "slug": "sample-order-confirmation",
+      "name": "Sample: Order confirmation (email)",
+      "type": "sample_order",
+      "theme": "minimal",
+      "formats": ["html", "txt", "pdf"],
+      "is_default": true
+    },
+    {
+      "slug": "sample-employment-certificate",
+      "name": "Sample: Employment certificate",
+      "type": "sample_certificate",
+      "theme": "classic",
+      "formats": ["html", "pdf", "docx"],
+      "footer": "sample-page-footer",
+      "is_default": true,
+      "margin": "22mm 24mm"
+    }
+  ]
+}

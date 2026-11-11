@@ -37,6 +37,17 @@ TEXT_CASES = ("none", "upper", "lower", "title", "capitalize")
 MAX_DECIMALS = 10
 
 
+RTL_LANGUAGES = frozenset({"he", "iw", "ar", "fa", "ur", "yi", "ps", "sd", "ug", "dv", "ckb"})
+
+
+def direction_for(locale: str | None, direction: str = "auto") -> str:
+    """Resolve "auto"/"ltr"/"rtl" to "ltr" or "rtl" (auto = by the locale's language)."""
+    if direction in ("ltr", "rtl"):
+        return direction
+    lang = (locale or "").replace("-", "_").split("_")[0].lower()
+    return "rtl" if lang in RTL_LANGUAGES else "ltr"
+
+
 def normalize_locale(code: str | None, default: str = "en_US") -> str:
     """Accept Django style (``en-us``) or Babel style (``en_US``) codes."""
     if not code:

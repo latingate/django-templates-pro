@@ -20,12 +20,16 @@ def check_templates_pro(app_configs=None, **kwargs):
                 f"TEMPLATES_PRO['OUTPUT_FORMATS'] contains {fmt!r} but no renderer is registered.",
                 id="templates_pro.E001"))
         elif not renderer.is_available():
-            extra = {"pdf": "pdf", "docx": "docx"}.get(fmt, fmt)
+            if fmt == "pdf" and getattr(renderer, "engine", "") == "weasyprint":
+                hint = ("WeasyPrint needs its Pango system library (see docs/installation.md), or "
+                        "remove PDF_ENGINE to use the default Typst engine (no system libraries).")
+            elif fmt == "pdf":
+                hint = "pip install typst"
+            else:
+                hint = f"pip install python-docx, or remove {fmt!r} from TEMPLATES_PRO['OUTPUT_FORMATS']."
             messages.append(Warning(
-                f"Output format {fmt!r} is enabled but its library is not installed.",
-                hint=f"pip install 'django-templates-pro[{extra}]' or remove {fmt!r} from "
-                     "TEMPLATES_PRO['OUTPUT_FORMATS'].",
-                id="templates_pro.W001"))
+                f"Output format {fmt!r} is enabled but its library is not available.",
+                hint=hint, id="templates_pro.W001"))
     for fmt in tp_settings.DEFAULT_OUTPUT_FORMATS:
         if fmt not in tp_settings.OUTPUT_FORMATS:
             messages.append(Error(

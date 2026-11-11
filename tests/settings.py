@@ -11,6 +11,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "templates_pro",
+    "templates_pro.samples",
     "tests.testapp",
 ]
 MIDDLEWARE = [

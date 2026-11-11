@@ -1,45 +1,197 @@
 {
   "constants": [
-    {"key": "company_name", "label": "Company name", "value": "Northwind Studio Ltd"},
-    {"key": "company_address", "label": "Company address", "value": "4 Canal Wharf, Leeds LS11 5PS"},
-    {"key": "company_phone", "label": "Phone", "value": "+44 113 496 0000"},
-    {"key": "company_email", "label": "Email", "value": "hello@northwind.example"},
-    {"key": "website_url", "label": "Website", "value": "northwind.example"},
-    {"key": "support_email", "label": "Support email", "value": "support@northwind.example"},
-    {"key": "vat_number", "label": "VAT number", "value": "GB 999 9999 73"},
-    {"key": "bank_name", "label": "Bank name", "value": "Example Bank plc"},
-    {"key": "bank_iban", "label": "IBAN", "value": "GB00 EXMP 0000 0000 0000 00"},
-    {"key": "bank_bic", "label": "BIC", "value": "EXMPGB2L"}
+    {
+      "key": "company_name",
+      "label": "Company name",
+      "value": "Northwind Studio Ltd"
+    },
+    {
+      "key": "company_address",
+      "label": "Company address",
+      "value": "4 Canal Wharf, Leeds LS11 5PS"
+    },
+    {
+      "key": "company_phone",
+      "label": "Phone",
+      "value": "+44 113 496 0000"
+    },
+    {
+      "key": "company_email",
+      "label": "Email",
+      "value": "hello@northwind.example"
+    },
+    {
+      "key": "website_url",
+      "label": "Website",
+      "value": "northwind.example"
+    },
+    {
+      "key": "support_email",
+      "label": "Support email",
+      "value": "support@northwind.example"
+    },
+    {
+      "key": "vat_number",
+      "label": "VAT number",
+      "value": "GB 999 9999 73"
+    },
+    {
+      "key": "bank_name",
+      "label": "Bank name",
+      "value": "Example Bank plc"
+    },
+    {
+      "key": "bank_iban",
+      "label": "IBAN",
+      "value": "GB00 EXMP 0000 0000 0000 00"
+    },
+    {
+      "key": "bank_bic",
+      "label": "BIC",
+      "value": "EXMPGB2L"
+    }
   ],
   "blocks": [
-    {"slug": "company-letterhead", "name": "Company letterhead", "category": "header", "types": [],
-     "description": "Logo and company contact details; uses constants only, so every type can use it."},
-    {"slug": "page-footer", "name": "Page footer", "category": "footer", "types": [],
-     "description": "Repeated at the bottom of every PDF/DOCX page, with page numbers."},
-    {"slug": "customer-details", "name": "Customer details", "category": "content",
-     "types": ["invoice", "customer_letter", "order_confirmation"],
-     "description": "Address block; works for every type that has a Customer group."},
-    {"slug": "bank-details", "name": "Bank details", "category": "content", "types": [],
-     "description": "Payment details (constants). Included inside 'Payment terms'."},
-    {"slug": "payment-terms", "name": "Payment terms", "category": "content", "types": ["invoice"],
-     "description": "Paid / due message; nests the Bank details block."},
-    {"slug": "signature", "name": "Signature", "category": "signature", "types": [],
-     "description": "Closing lines used by letters and invoices."}
+    {
+      "slug": "company-letterhead",
+      "name": "Company letterhead",
+      "category": "header",
+      "types": [],
+      "description": "Logo and company contact details; uses constants only, so every type can use it."
+    },
+    {
+      "slug": "page-footer",
+      "name": "Page footer",
+      "category": "footer",
+      "types": [],
+      "description": "Repeated at the bottom of every PDF/DOCX page, with page numbers."
+    },
+    {
+      "slug": "customer-details",
+      "name": "Customer details",
+      "category": "content",
+      "types": [
+        "invoice",
+        "customer_letter",
+        "order_confirmation"
+      ],
+      "description": "Address block; works for every type that has a Customer group."
+    },
+    {
+      "slug": "bank-details",
+      "name": "Bank details",
+      "category": "content",
+      "types": [],
+      "description": "Payment details (constants). Included inside 'Payment terms'."
+    },
+    {
+      "slug": "payment-terms",
+      "name": "Payment terms",
+      "category": "content",
+      "types": [
+        "invoice"
+      ],
+      "description": "Paid / due message; nests the Bank details block."
+    },
+    {
+      "slug": "signature",
+      "name": "Signature",
+      "category": "signature",
+      "types": [],
+      "description": "Closing lines used by letters and invoices."
+    },
+    {
+      "slug": "page-footer-he",
+      "name": "Page footer (Hebrew)",
+      "category": "footer",
+      "types": [],
+      "description": "Hebrew page footer with page X of Y, for right-to-left templates."
+    }
   ],
   "templates": [
-    {"slug": "invoice-standard", "name": "Invoice (standard)", "type": "invoice", "theme": "classic",
-     "formats": ["html", "pdf", "docx", "txt"], "footer": "page-footer", "is_default": true,
-     "margin": "18mm 18mm 22mm 18mm"},
-    {"slug": "invoice-modern", "name": "Invoice (modern)", "type": "invoice", "theme": "modern",
-     "formats": ["html", "pdf"], "footer": "page-footer", "margin": "16mm",
-     "extra_css": ":root { --tp-accent: #0f766e; }"},
-    {"slug": "welcome-letter", "name": "Welcome letter", "type": "customer_letter",
-     "theme": "corporate", "formats": ["html", "pdf", "docx"], "footer": "page-footer",
-     "is_default": true},
-    {"slug": "order-confirmation", "name": "Order confirmation (email)", "type": "order_confirmation",
-     "theme": "minimal", "formats": ["html", "txt", "pdf"], "is_default": true},
-    {"slug": "employment-certificate", "name": "Employment certificate",
-     "type": "employment_certificate", "theme": "northwind", "formats": ["html", "pdf", "docx"],
-     "footer": "page-footer", "is_default": true, "margin": "22mm 24mm"}
+    {
+      "slug": "invoice-standard",
+      "name": "Invoice (standard)",
+      "type": "invoice",
+      "theme": "classic",
+      "formats": [
+        "html",
+        "pdf",
+        "docx",
+        "txt"
+      ],
+      "footer": "page-footer",
+      "is_default": true,
+      "margin": "18mm 18mm 22mm 18mm"
+    },
+    {
+      "slug": "invoice-modern",
+      "name": "Invoice (modern)",
+      "type": "invoice",
+      "theme": "modern",
+      "formats": [
+        "html",
+        "pdf"
+      ],
+      "footer": "page-footer",
+      "margin": "16mm",
+      "extra_css": ":root { --tp-accent: #0f766e; }"
+    },
+    {
+      "slug": "welcome-letter",
+      "name": "Welcome letter",
+      "type": "customer_letter",
+      "theme": "corporate",
+      "formats": [
+        "html",
+        "pdf",
+        "docx"
+      ],
+      "footer": "page-footer",
+      "is_default": true
+    },
+    {
+      "slug": "order-confirmation",
+      "name": "Order confirmation (email)",
+      "type": "order_confirmation",
+      "theme": "minimal",
+      "formats": [
+        "html",
+        "txt",
+        "pdf"
+      ],
+      "is_default": true
+    },
+    {
+      "slug": "employment-certificate",
+      "name": "Employment certificate",
+      "type": "employment_certificate",
+      "theme": "northwind",
+      "formats": [
+        "html",
+        "pdf",
+        "docx"
+      ],
+      "footer": "page-footer",
+      "is_default": true,
+      "margin": "22mm 24mm"
+    },
+    {
+      "slug": "invoice-hebrew",
+      "name": "Invoice (Hebrew, RTL)",
+      "type": "invoice",
+      "theme": "modern",
+      "formats": [
+        "html",
+        "pdf",
+        "docx",
+        "txt"
+      ],
+      "footer": "page-footer-he",
+      "locale": "he_IL",
+      "direction": "rtl",
+      "margin": "16mm",
+      "extra_css": ":root { --tp-accent: #0f766e; }"
+    }
   ]
 }

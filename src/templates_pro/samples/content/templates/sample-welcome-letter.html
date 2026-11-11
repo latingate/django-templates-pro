@@ -1,0 +1,11 @@
+<div data-tp="block" data-slug="sample-company-letterhead"></div>
+<p style="text-align: right"><span data-tp="dynamic" data-key="today" data-format='{"kind":"date","style":"long"}'>Today's date</span></p>
+<div data-tp="block" data-slug="sample-customer-details"></div>
+<h2>Welcome to <span data-tp="const" data-key="company_name">Company name</span>, <span data-tp="var" data-path="customer.name">Customer › Contact name</span></h2>
+<p>Dear <span data-tp="var" data-path="customer.name">Customer › Contact name</span>,</p>
+<p>Thank you for working with us. Your account has been active since <strong><span data-tp="var" data-path="account.since" data-format='{"kind":"date","style":"long","fallback":"today"}'>Account › Customer since</span></strong>, and we are glad to have <span data-tp="var" data-path="customer.company">Customer › Company</span> on board.</p>
+<div data-tp="if" data-path="account.open_invoices" data-op="gt" data-value="0"><p>A quick note: you currently have <strong><span data-tp="var" data-path="account.open_invoices">Account › Open invoices</span></strong> open invoice(s), with an outstanding balance of <strong><span data-tp="var" data-path="account.balance">Account › Open balance</span></strong>.</p></div>
+<p>Here is how to reach us:</p>
+<ul><li><p>Your account manager: <span data-tp="var" data-path="sender.name">Sender › Sender name</span></p></li><li><p>Support: <span data-tp="const" data-key="support_email">Support email</span></p></li><li><p>Website: <span data-tp="const" data-key="website_url">Website</span></p></li></ul>
+<div data-tp="block" data-slug="sample-signature"></div>
+<p><span data-tp="var" data-path="sender.name">Sender › Sender name</span><br><em><span data-tp="var" data-path="sender.title">Sender › Sender job title</span></em></p>

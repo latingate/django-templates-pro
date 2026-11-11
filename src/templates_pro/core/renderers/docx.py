@@ -71,6 +71,13 @@ class _TreeBuilder(HTMLParser):
         self.stack[-1].children.append(data)
 
 
+def _plain(nodes) -> str:
+    out = []
+    for n in nodes:
+        out.append(n if isinstance(n, str) else _plain(n.children))
+    return "".join(out)
+
+
 def parse_html(html: str) -> El:
     b = _TreeBuilder()
     b.feed(html or "")
@@ -90,6 +97,7 @@ _PAGE_SIZES_MM = {
     "A3": (297, 420), "A4": (210, 297), "A5": (148, 210),
     "Letter": (215.9, 279.4), "Legal": (215.9, 355.6),
 }  # fmt: skip
+_RTL_CHARS = re.compile("[\u0590-\u08ff\ufb1d-\ufdff\ufe70-\ufefc]")
 _COLOR_RE = re.compile(r"#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\b")
 _RGB_RE = re.compile(r"rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)")
 
@@ -152,21 +160,46 @@ class _Converter:
         self.r = renderer
         self.input = doc
         self.document = document
+        self.rtl = doc.direction == "rtl"
+
+    def _mark(self, parent, tag: str):
+        from docx.oxml import OxmlElement
+
+        if parent.find(f"{{http://schemas.openxmlformats.org/wordprocessingml/2006/main}}{tag[2:]}") is None:
+            parent.append(OxmlElement(tag))
 
     # -- paragraphs ------------------------------------------------------
-    def new_paragraph(self, container, style: str | None = None):
+    def new_paragraph(self, container, style: str | None = None, text: str | None = None):
+        from .typst_pdf import first_strong
+
         p = container.add_paragraph()
+        own = first_strong(text) if text else None
+        p._tp_bidi = (own == "rtl") if own else self.rtl
         if style:
             try:
                 p.style = self.document.styles[style]
             except KeyError:
                 pass
+        if p._tp_bidi:
+            self._mark(p._p.get_or_add_pPr(), "w:bidi")
+        elif self.rtl:
+            # The RTL document's Normal style is bidi; switch it off for this LTR paragraph.
+            from docx.oxml import OxmlElement
+            from docx.oxml.ns import qn
+
+            off = OxmlElement("w:bidi")
+            off.set(qn("w:val"), "0")
+            p._p.get_or_add_pPr().append(off)
         return p
 
     def apply_block_style(self, p, el: El):
         from docx.enum.text import WD_ALIGN_PARAGRAPH
 
         align = el.style().get("text-align")
+        if getattr(p, "_tp_bidi", self.rtl) and align in ("left", "right"):
+            # In a right-to-left (bidi) paragraph Word reads jc "left" as the start
+            # side, i.e. the right edge, so swap to keep the editor's visual choice.
+            align = "left" if align == "right" else "right"
         mapping = {
             "center": WD_ALIGN_PARAGRAPH.CENTER,
             "right": WD_ALIGN_PARAGRAPH.RIGHT,
@@ -182,7 +215,7 @@ class _Converter:
 
         def flush():
             if pending and any(not isinstance(n, str) or n.strip() for n in pending):
-                p = self.new_paragraph(container, style)
+                p = self.new_paragraph(container, style, _plain(pending))
                 self.inlines(p, pending, _Fmt())
             pending.clear()
 
@@ -198,11 +231,11 @@ class _Converter:
     def block(self, container, el: El, *, list_level=0, list_kind=None, style=None):
         tag = el.tag
         if tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
-            p = self.new_paragraph(container, f"Heading {tag[1]}")
+            p = self.new_paragraph(container, f"Heading {tag[1]}", _plain(el.children))
             self.apply_block_style(p, el)
             self.inlines(p, el.children, _Fmt())
         elif tag == "p":
-            p = self.new_paragraph(container, style)
+            p = self.new_paragraph(container, style, _plain(el.children))
             self.apply_block_style(p, el)
             self.inlines(p, el.children, _Fmt())
         elif tag in ("ul", "ol"):
@@ -236,7 +269,7 @@ class _Converter:
                 inline.extend(c.children + [" "])
             else:
                 inline.append(c)
-        p = self.new_paragraph(container, style)
+        p = self.new_paragraph(container, style, _plain(inline))
         self.inlines(p, inline, _Fmt())
         for n in nested:
             for sub in n.children:
@@ -267,6 +300,8 @@ class _Converter:
             table.style = self.document.styles["Table Grid"]
         except KeyError:
             pass
+        if self.rtl:  # columns run right to left
+            self._mark(table._tbl.tblPr, "w:bidiVisual")
         for ri, cells in enumerate(grid):
             ci = 0
             for cell_el in cells:
@@ -345,6 +380,8 @@ class _Converter:
         if f.href:
             return self.hyperlink(p, text, f)
         run = p.add_run(text)
+        if _RTL_CHARS.search(text):
+            self._complex_script(run, f)
         run.bold = f.bold or None
         run.italic = f.italic or None
         run.underline = f.underline or None
@@ -364,6 +401,22 @@ class _Converter:
             run.font.size = Pt(f.size)
         return run
 
+    def _complex_script(self, run, f: _Fmt):
+        """Hebrew/Arabic runs: mark RTL and repeat bold/italic/size for complex scripts."""
+        from docx.oxml import OxmlElement
+        from docx.oxml.ns import qn
+
+        rpr = run._r.get_or_add_rPr()
+        self._mark(rpr, "w:rtl")
+        if f.bold:
+            self._mark(rpr, "w:bCs")
+        if f.italic:
+            self._mark(rpr, "w:iCs")
+        if f.size:
+            sz = OxmlElement("w:szCs")
+            sz.set(qn("w:val"), str(int(round(f.size * 2))))
+            rpr.append(sz)
+
     def hyperlink(self, p, text: str, f: _Fmt):
         from docx.opc.constants import RELATIONSHIP_TYPE as RT
         from docx.oxml import OxmlElement
@@ -382,6 +435,8 @@ class _Converter:
         rpr.append(u)
         if f.bold:
             rpr.append(OxmlElement("w:b"))
+        if _RTL_CHARS.search(text):
+            rpr.append(OxmlElement("w:rtl"))
         run.append(rpr)
         t = OxmlElement("w:t")
         t.text = text
@@ -520,6 +575,24 @@ class DocxRenderer(Renderer):
         section.bottom_margin, section.left_margin = Mm(bottom), Mm(left)
         return section
 
+    @staticmethod
+    def setup_direction(document, section, doc: RenderInput):
+        if doc.direction != "rtl":
+            return
+        from docx.oxml import OxmlElement
+        from docx.oxml.ns import qn
+
+        sect = section._sectPr
+        if sect.find(qn("w:bidi")) is None:
+            sect.append(OxmlElement("w:bidi"))
+        # Default paragraph style right-to-left too (new paragraphs typed in Word).
+        try:
+            ppr = document.styles["Normal"].element.get_or_add_pPr()
+            if ppr.find(qn("w:bidi")) is None:
+                ppr.append(OxmlElement("w:bidi"))
+        except KeyError:
+            pass
+
     def render(self, doc: RenderInput) -> bytes:
         if not self.is_available():
             raise RendererUnavailable(
@@ -527,6 +600,7 @@ class DocxRenderer(Renderer):
             )
         document = self.new_document(doc)
         section = self.setup_page(document, doc.page)
+        self.setup_direction(document, section, doc)
         conv = _Converter(self, doc, document)
         if doc.header_html:
             header = section.header

@@ -43,6 +43,10 @@ class RenderInput:
     footer_html: str = ""
     page: PageSettings = field(default_factory=PageSettings)
     lang: str = "en"
+    #: "ltr" or "rtl" (resolved; "auto" is decided before rendering)
+    direction: str = "ltr"
+    #: theme key, used by renderers that style without CSS (Typst)
+    theme: str = ""
     base_url: str | None = None
     #: WeasyPrint-compatible url_fetcher (also used by the DOCX renderer for images)
     url_fetcher: Callable | None = None
@@ -67,6 +71,13 @@ BASE_CSS = """
 .tp-document table p { margin: 0; }
 .tp-document td, .tp-document th { vertical-align: top; }
 .tp-running-header, .tp-running-footer { font-size: 9pt; }
+[dir=rtl] .tp-document ul, [dir=rtl] .tp-document ol { padding-left: 0; padding-right: 1.6em; }
+.tp-document pre, .tp-document code { direction: ltr; unicode-bidi: isolate; }
+/* Each paragraph takes the direction of its first letter (an English line in a
+   Hebrew document stays left-to-right), the same rule the PDF and DOCX use. */
+.tp-document p, .tp-document li, .tp-document h1, .tp-document h2, .tp-document h3,
+.tp-document h4, .tp-document h5, .tp-document h6, .tp-running-header p,
+.tp-running-footer p { unicode-bidi: plaintext; }
 """
 
 PRINT_CSS = """
@@ -94,8 +105,10 @@ def build_document_html(doc: RenderInput, *, for_print: bool = False) -> str:
         body = f'{header}{footer}<main class="tp-document">{doc.body_html}</main>'
     else:
         body = f'{header}<main class="tp-document">{doc.body_html}</main>{footer}'
+    direction = "rtl" if doc.direction == "rtl" else "ltr"
     return (
-        f'<!DOCTYPE html>\n<html lang="{_html.escape(doc.lang)}"><head><meta charset="utf-8">'
+        f'<!DOCTYPE html>\n<html lang="{_html.escape(doc.lang)}" dir="{direction}">'
+        f'<head><meta charset="utf-8">'
         f'<meta name="viewport" content="width=device-width, initial-scale=1">'
         f"<title>{_html.escape(doc.title)}</title><style>{css}</style></head>"
         f'<body class="tp-body">{body}</body></html>'
@@ -124,10 +137,12 @@ def all_renderers() -> dict[str, Renderer]:
 def _register_builtins():
     from .docx import DocxRenderer
     from .html import HtmlRenderer
-    from .pdf import PdfRenderer
     from .txt import TxtRenderer
+    from .typst_pdf import TypstPdfRenderer
 
-    for r in (HtmlRenderer(), PdfRenderer(), DocxRenderer(), TxtRenderer()):
+    # "pdf" defaults to Typst (pure pip). The Django layer swaps in WeasyPrint
+    # when TEMPLATES_PRO["PDF_ENGINE"] == "weasyprint" (see templates_pro.apps).
+    for r in (HtmlRenderer(), TypstPdfRenderer(), DocxRenderer(), TxtRenderer()):
         register_renderer(r)
 
 

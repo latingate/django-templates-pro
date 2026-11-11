@@ -11,7 +11,9 @@ class TemplatesProConfig(AppConfig):
     def ready(self):
         from django.utils.module_loading import autodiscover_modules
 
-        from . import checks, signals  # noqa: F401
+        from . import checks, engines, signals  # noqa: F401
+
+        engines.configure()
 
         # Each installed app may define its template types in doctemplate_types.py
         autodiscover_modules("doctemplate_types")

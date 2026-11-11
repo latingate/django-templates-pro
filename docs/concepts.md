@@ -2,7 +2,7 @@
 
 ```
 Template type (code)          DocumentTemplate (admin)          Output
- schema + build_context  ──▶   editor HTML ─compile─▶ Jinja ──▶  HTML · PDF · DOCX · TXT
+ schema + build_context  ──▶   editor HTML ─compile─▶ Jinja ──▶  HTML · PDF (Typst) · DOCX · TXT
                                  │ includes
                                  ▼
                          TemplateBlock (admin)   SiteConstant (admin)
@@ -84,12 +84,43 @@ Select content and click **Condition** to show it only if a field *has a
 value*, *is empty*, *equals*, *is greater than*… a value. Typical uses are a
 "Discount" line only when there is a discount, or a "Paid" stamp.
 
+## Text direction (RTL)
+
+Every template has a **Text direction**: *Auto* (the default), *Left to
+right* or *Right to left*. *Auto* is right-to-left when the render locale's
+language is Hebrew, Arabic, Persian, Urdu, Yiddish (and a few more), and
+left-to-right otherwise. The render locale is the template's own *Locale*,
+or the object's (`TemplateType.get_locale`), or the site default.
+
+Direction applies everywhere:
+
+- **Editor**: the writing surface flips as soon as you change the
+  *Direction* or *Locale* field.
+- **HTML**: `<html dir="rtl" lang="he">`.
+- **PDF**: Typst lays out right to left, including table columns, lists and
+  page headers/footers.
+- **DOCX**: right-to-left paragraphs, tables and section, with Hebrew/Arabic
+  runs marked as complex script.
+- **TXT**: plain Unicode, which readers display correctly.
+
+**Each paragraph takes the direction of its first letter.** For example, an
+English address line inside a Hebrew document stays left-to-right, and a
+Hebrew sentence in an English document stays right-to-left. That is the same
+rule as CSS `unicode-bidi: plaintext`, and HTML, PDF and DOCX follow it
+alike. In the editor, chips don't count, because they show field labels and
+not the values.
+
+Explicit alignment from the toolbar (left, centre, right) is kept as you see
+it in the editor, in every format.
+
 ## Themes and page setup
 
-A template picks a **theme** (CSS for HTML/PDF output), page size,
-orientation, margins and optional extra CSS. Built-in themes are `classic`,
-`modern`, `minimal`, `corporate` and `none`. Projects can add their own
-([rendering.md](rendering.md#themes)).
+A template picks a **theme**, page size, orientation, margins and optional
+extra CSS. A theme is CSS for HTML output (and for PDF when the WeasyPrint
+engine is used), plus a matching Typst style for the default PDF engine.
+Built-in themes are `classic`, `modern`, `minimal`, `corporate` and `none`.
+Projects can add their own ([rendering.md](rendering.md#themes)). *Extra CSS*
+affects HTML output only (and WeasyPrint PDFs).
 
 ## Generated documents
 

@@ -49,9 +49,27 @@ and relative URLs, allows images only from `http(s)`, relative paths and
 raster `data:` URIs, and adds `rel="noopener noreferrer"` to `target=_blank`
 links. Stored bodies are sanitised on save.
 
+## 5. Typst PDF generation
+
+The default PDF engine turns the sanitised HTML into Typst source, which is
+itself a programming language, so the same rule as for Jinja applies:
+
+- **Document text only ever becomes Typst string literals** (`#"..."`, with
+  `\` and `"` escaped). Text a user types, such as `#read("/etc/passwd")`,
+  `]#panic()[` or `$x$`, is printed literally.
+- Values emitted as code (colours, sizes, column widths, spans, page setup)
+  are produced by the converter after strict validation. Anything else is
+  dropped.
+- Each PDF compiles in a fresh temporary folder that holds only the generated
+  file and its images. Typst cannot read outside that root and has no network
+  access.
+- Theme Typst styles come from your settings (developer-written), never from
+  template authors.
+
 ## URL fetching
 
-PDF and DOCX rendering fetch images (and CSS `url()` in themes or extra CSS).
+PDF and DOCX rendering fetch images (and, with the WeasyPrint engine, CSS
+`url()` in themes or extra CSS).
 To prevent SSRF and local file disclosure, the default fetcher
 (`templates_pro.fetchers.safe_url_fetcher`) only allows:
 

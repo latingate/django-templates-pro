@@ -2,8 +2,13 @@
 
 Reusable Django app (pip: `django-templates-pro`, import/app label: `templates_pro`).
 WYSIWYG document templates: TipTap editor → stored HTML with "chips" → compiled to
-sandboxed Jinja2 → rendered to HTML / PDF (WeasyPrint) / DOCX (python-docx) / TXT (html2text).
-Used by several unrelated Django projects, so keep it generic: no project-specific code here.
+sandboxed Jinja2 → rendered to HTML / PDF (Typst; WeasyPrint optional) / DOCX (python-docx) / TXT
+(html2text), with right-to-left support. Used by several unrelated Django projects, so keep it
+generic: no project-specific code here.
+
+**Hard requirement: `pip install django-templates-pro` must be enough on Windows, macOS and Linux.**
+No dependency may need system libraries (that's why WeasyPrint is only an optional engine). Check
+any new dependency ships wheels for all three.
 
 Support matrix: **Python 3.10+, Django 4.2+**. Don't use 3.11+ syntax/stdlib
 (no `typing.Self`, `tomllib`, `ExceptionGroup`) or Django 5-only APIs (`db_default`,
@@ -14,11 +19,20 @@ Support matrix: **Python 3.10+, Django 4.2+**. Don't use 3.11+ syntax/stdlib
 
 - `core/` is **pure Python, no Django imports**: `schema.py` (Var/Group/ListOf), `compiler.py`
   (HTML → Jinja + sanitiser; **the HTML contract**), `engine.py` (sandbox, plain-data check,
-  limits), `formatting.py` (Babel), `renderers/`.
+  limits), `formatting.py` (Babel, `direction_for`), `renderers/` (`typst_pdf.py` = default PDF,
+  HTML→Typst converter `TypstWriter` + Typst themes; `pdf.py` = optional WeasyPrint; `docx.py`;
+  `txt.py`; `html.py`).
 - Django layer: `registry.py` (TemplateType/register; projects define types in
   `<app>/doctemplate_types.py`, autodiscovered in `apps.py`), `models.py`, `services.py`
   (public API), `widgets.py`, `forms.py`, `admin.py`, `views.py` (previews), `fetchers.py`,
-  `themes.py`, `conf.py` (`settings.TEMPLATES_PRO` dict with defaults), `checks.py`, `signals.py`.
+  `themes.py`, `conf.py` (`settings.TEMPLATES_PRO` dict with defaults), `checks.py`, `signals.py`,
+  `engines.py` (registers the PDF renderer chosen by `PDF_ENGINE`, at startup and on setting changes).
+- `samples/`: optional app `templates_pro.samples` = starter content for pip users. Sample types
+  (`sample_*` keys, dict contexts, no models) + `content/` (manifest, blocks, templates in
+  stored-HTML form, `sample-` slugs, logo as a data URI) + `loader.py`; loaded by
+  `manage.py templates_pro_samples`. It is an adapted copy of `example/demo/samples/`: when a
+  demo sample changes, update the copy too.
+- `fonts/`: bundled Noto Sans + Noto Sans Hebrew (OFL, keep `OFL.txt`), always on Typst's font path.
 - `frontend/` = editor source (TipTap 3 + Vite, vanilla JS, no framework). The **built** bundle
   is committed in `src/templates_pro/static/templates_pro/editor/`. Consumers never need Node.
 - `example/` = demo project; `example/demo/samples/` = sample templates/blocks in stored-HTML form.
@@ -38,6 +52,15 @@ Support matrix: **Python 3.10+, Django 4.2+**. Don't use 3.11+ syntax/stdlib
 5. **URL fetching** for PDF/DOCX goes through `fetchers.safe_url_fetcher` (data:, STATIC, MEDIA,
    allowlisted prefixes only). WeasyPrint ≥68 uses a `URLFetcher` class; `renderers/pdf.py:adapt_fetcher`
    bridges the classic dict-returning function API. Keep both working.
+5b. **Typst source:** `TypstWriter` emits document text ONLY via `tstr()` string literals
+   (`#"..."`). Anything emitted as code (colours, lengths, spans, widths) goes through the
+   validators (`tcolor`, `tlength`, `_span`…). Compiles run in a temp root with only the
+   generated file + images. Theme values are developer-provided Typst expressions.
+5c. **Direction:** templates resolve "auto" with `formatting.direction_for(locale, direction)`;
+   renderers get `RenderInput.direction` = "ltr"/"rtl". Each paragraph follows its first strong
+   letter (`typst_pdf.first_strong`) in Typst, DOCX (`w:bidi` on/off, explicit `w:val="0"` in RTL
+   docs) and HTML (`unicode-bidi: plaintext`). In bidi DOCX paragraphs jc "left"/"right" are
+   logical, so the converter swaps them (verified in LibreOffice).
 6. **Migrations:** released migrations are never edited, only added. Generate with
    `python -c` + `tests.settings` (see below) and check they import on Django 4.2.
 7. Blocks are resolved **at render time** (single source of truth). Cache invalidation = version token
@@ -47,8 +70,8 @@ Support matrix: **Python 3.10+, Django 4.2+**. Don't use 3.11+ syntax/stdlib
 ## Commands
 
 ```bash
-pip install -e ".[dev]"            # or -r requirements-dev.txt; weasyprint needs Pango system libs
-pytest                             # whole suite, ~3s
+pip install -e ".[dev]"            # or -r requirements-dev.txt (no system libraries needed)
+pytest                             # whole suite (~140 tests), <10s
 pytest tests/test_compiler.py -q   # compiler/sanitiser
 nox                                # py3.10–3.13 × Django 4.2/5.1/5.2
 ruff check .
@@ -88,7 +111,9 @@ DJANGO_SETTINGS_MODULE=tests.settings python -c "import sys;sys.path[:0]=['.','s
 
 ## Roadmap / ideas (not done yet)
 
-- Editor UI translations; RTL documents (`dir` per template).
+- Editor UI translations (UI is English; documents can be RTL).
+- Per-paragraph direction override in the editor (today: first letter decides).
+- DOCX: RTL bullet/numbering placement not verified in Word (LibreOffice shows bullets on the left).
 - Template versions history / restore (only a version counter today).
 - Image upload endpoint for the editor (today: URL or pasted data URI).
 - Per-tenant constants (today: one global set + CONSTANTS_PROVIDER(request)).

@@ -118,8 +118,14 @@ def get_currency(self, invoice=None):
 
 Locale precedence is the `locale=` argument, then the template's *Locale*
 field, then `get_locale(obj)`, then `TEMPLATES_PRO["DEFAULT_LOCALE"]`, then
-`LANGUAGE_CODE`. Currency precedence is the chip's own currency, then
+`LANGUAGE_CODE`.
+
+Currency precedence is the chip's own currency, then
 `get_currency(obj)`, then `DEFAULT_CURRENCY`.
+
+The locale also decides the **text direction** of templates whose direction
+is *Auto*: returning `"he_IL"` from `get_locale()` renders that customer's
+documents right-to-left (see [concepts.md](concepts.md#text-direction-rtl)).
 
 ## Inspecting the registry
 

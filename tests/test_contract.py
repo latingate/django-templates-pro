@@ -27,8 +27,8 @@ def _text(source: str) -> str:
 @pytest.mark.parametrize("fixture", CASES, ids=lambda p: p.stem)
 def test_roundtrip_compiles_identically(fixture):
     kind, name = fixture.name.split("--", 1)
-    original = compile_html((SAMPLES / kind / name).read_text())
-    roundtrip = compile_html(fixture.read_text())
+    original = compile_html((SAMPLES / kind / name).read_text(encoding="utf-8"))
+    roundtrip = compile_html(fixture.read_text(encoding="utf-8"))
     assert roundtrip.ok, roundtrip.errors
     assert original.ok, original.errors
     assert roundtrip.variables == original.variables

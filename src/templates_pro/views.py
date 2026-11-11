@@ -68,6 +68,7 @@ def live_preview(request):
             margin=payload.get("margin") or "20mm",
             extra_css=payload.get("extra_css") or "",
             locale=payload.get("locale") or None,
+            direction=payload.get("direction") or "auto",
             request=request,
         )
     except RendererUnavailable as exc:

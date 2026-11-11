@@ -197,6 +197,10 @@ class TemplateBlock(TimeStampedModel):
         return {"templates": templates, "blocks": blocks} if (templates or blocks) else {}
 
 
+DIRECTION_CHOICES = [("auto", _("Auto (from the locale)")), ("ltr", _("Left to right")),
+                     ("rtl", _("Right to left"))]
+
+
 class DocumentTemplate(TimeStampedModel):
     """A document template of a registered type, rendered to one or more formats."""
 
@@ -213,6 +217,9 @@ class DocumentTemplate(TimeStampedModel):
     locale = models.CharField(
         _("locale"), max_length=20, blank=True,
         help_text=_("e.g. en_US, de_DE, he_IL. Empty: the object's or the site default."))
+    direction = models.CharField(
+        _("text direction"), max_length=4, choices=DIRECTION_CHOICES, default="auto",
+        help_text=_("Auto: right-to-left for Hebrew, Arabic, Persian and Urdu locales."))
     filename_pattern = models.CharField(
         _("file name"), max_length=200, blank=True,
         help_text=_("e.g. invoice-{invoice.number}. Empty: the type default."))

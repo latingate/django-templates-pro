@@ -8,7 +8,7 @@
 .tp-document h3 { font-size: 11pt; color: var(--tp-navy); margin: 1em 0 .4em; }
 .tp-document p { margin: 0 0 .65em; }
 .tp-document table { margin: .9em 0 1.2em; border: 1px solid #c8d1dc; }
-.tp-document th { background: var(--tp-navy); color: #fff; padding: 6px 9px; text-align: left; }
+.tp-document th { background: var(--tp-navy); color: #fff; padding: 6px 9px; text-align: start; }
 .tp-document td { padding: 6px 9px; border-top: 1px solid #c8d1dc; }
 .tp-document tr:nth-child(even) td { background: var(--tp-band); }
 .tp-document blockquote { margin: 1em 0; padding: .7em 1em; border: 1px solid #c8d1dc;
