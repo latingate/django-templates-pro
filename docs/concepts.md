@@ -62,8 +62,8 @@ every document rendered afterwards.
 - The provider is called as `provider(request=request)`. The request is
   whatever the caller passed to `render(..., request=request)`, so it can be
   `None` (background tasks, the editor's field list).
-- A chip whose key is not defined is a **warning**, not an error: the template
-  saves and the chip renders empty. The same happens when a constant is later
+- A chip whose key is not defined does not block saving: the editor shows it
+  in red and it renders empty. The same happens when a constant is later
   deleted or deactivated.
 - There is one global set of constants. For per-tenant values, return
   different values from the provider based on the request.

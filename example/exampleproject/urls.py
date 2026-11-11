@@ -9,6 +9,8 @@ urlpatterns = [
     path("doc/<slug:slug>/<int:pk>.<str:fmt>", views.document, name="document"),
     path("editors/", views.editor_gallery, name="editor_gallery"),
     path("my-letter/", views.user_letter, name="user_letter"),
+    path("docs/", views.docs_index, name="docs_index"),
+    path("docs/<slug:slug>/", views.docs_page, name="docs_page"),
     path("admin/", admin.site.urls),
     path("templates-pro/", include("templates_pro.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

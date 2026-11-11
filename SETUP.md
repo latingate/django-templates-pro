@@ -13,11 +13,11 @@ just follow every step in order.
 ## Contents
 
 1. [Prerequisites](#1-prerequisites)
-2. [Get the code](#2-get-the-code) ✅
-3. [Create a virtual environment](#3-create-a-virtual-environment) ✅
-4. [Install Python dependencies](#4-install-python-dependencies) ✅
+2. [Get the code](#2-get-the-code-) ✅
+3. [Create a virtual environment](#3-create-a-virtual-environment-) ✅
+4. [Install Python dependencies](#4-install-python-dependencies-) ✅
 5. [PDF output (nothing to install)](#5-pdf-output-nothing-to-install)
-6. [Set up the demo database](#6-set-up-the-demo-database) ✅ (after the fix)
+6. [Set up the demo database](#6-set-up-the-demo-database--after-the-fix) ✅ (after the fix)
 7. [Run the demo](#7-run-the-demo)
 8. [PyCharm configuration](#8-pycharm-configuration) (interpreter, Django support, run configurations)
 9. [Verify everything](#9-verify-everything)
@@ -160,6 +160,10 @@ system library:
 
 ## 6. Set up the demo database ✅ (after the fix)
 
+> **Shortcut:** `python example/run_demo.py` does steps 3–7 in one go: it creates or
+> reuses `.venv`, installs the package, migrates, seeds an empty database and
+> starts the server.
+
 The demo uses SQLite at `example\db.sqlite3`. It must be created **once**
 before running the server. Running only `runserver` gives
 `no such table: templates_pro_documenttemplate`.
@@ -199,6 +203,7 @@ python manage.py runserver
 | <http://127.0.0.1:8000/> | every template rendered for real records, in each enabled format |
 | <http://127.0.0.1:8000/editors/> | the editor in all presets and skins, outside the admin |
 | <http://127.0.0.1:8000/my-letter/> | a user-facing page where a user writes and renders a template |
+| <http://127.0.0.1:8000/docs/> | the documentation (every `.md` file of the repository), in reading order |
 | <http://127.0.0.1:8000/admin/> | Document templates, Blocks, Constants, Generated documents (login admin / admin) |
 
 Things to try:
@@ -560,7 +565,10 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 python -m pip install -r requirements-dev.txt
 
-# demo (example folder)
+# demo: everything in one command (from the repository root)
+python example/run_demo.py
+
+# demo, step by step (example folder)
 cd example
 python manage.py migrate
 python manage.py seed_demo            # --reset to reload

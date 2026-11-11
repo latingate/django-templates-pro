@@ -1,6 +1,12 @@
 # Demo project
 
 ```bash
+python run_demo.py             # does everything below, then starts the server
+```
+
+Or step by step, in an active virtual environment:
+
+```bash
 pip install -e ..             # from this folder: installs the package and all its dependencies
 python manage.py migrate
 python manage.py seed_demo     # constants, blocks, templates, sample records, admin/admin
@@ -12,7 +18,11 @@ python manage.py runserver
 | `/` | every template rendered for real records in each enabled format |
 | `/editors/` | the widget in all presets and skins, plus a custom toolbar, outside the admin |
 | `/my-letter/` | a user-facing page where a user writes and renders their own template |
+| `/docs/` | the documentation: every Markdown file of the repository, rendered and in reading order |
 | `/admin/` | templates, blocks (with "used by"), constants, generated documents |
+
+What to open and what to look for in each template is in
+[docs/samples.md](../docs/samples.md#demo-project).
 
 ## How the demo pages get their data
 
@@ -62,6 +72,15 @@ decides which object to pass to `render()`.
 
 The sample HTML is exactly what the editor stores. Read it alongside
 `docs/html-contract.md`.
+
+## The documentation page
+
+`/docs/` lists every `.md` file found in the repository root, `docs/`,
+`example/` and `frontend/`, and `/docs/<name>/` shows one of them. The order
+is set by `SECTIONS` in `demo/docs.py`; a file that is not listed there still
+appears, under *More*. Links between the files work inside the viewer. The
+pages are converted by `demo/markdown.py`, a small converter written for
+these files, so the demo needs no extra package.
 
 The demo customers use different locales (en_GB, de_DE, fr_FR, he_IL) and
 currencies. Open their invoices to see the dates, numbers, currency and

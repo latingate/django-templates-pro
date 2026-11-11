@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Docs: new pages for the admin, the samples and demo, the management commands and
+  troubleshooting; "how formatting works" in `docs/formatting.md`; where document data comes
+  from in `docs/concepts.md`. `docs/index.md` lists every page in reading order.
+- Demo: a documentation page at `/docs/` renders the repository's Markdown files.
+- Demo: `python example/run_demo.py` sets up and starts the demo in one command (virtual
+  environment, install, migrate, seed on first run, runserver), from any folder.
+- Removed `docs/SETUP.md`, an outdated copy of `SETUP.md`.
+
 ## 0.2.0 — 2026-11-10
 
 **Pure-pip install and right-to-left support.**

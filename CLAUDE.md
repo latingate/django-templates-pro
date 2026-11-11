@@ -82,7 +82,7 @@ npm run watch
 npm run contract                   # editor round-trip fixtures → tests/fixtures/editor_roundtrip/
 
 cd example && python manage.py migrate && python manage.py seed_demo && python manage.py runserver
-# admin / admin; pages: /, /editors/, /my-letter/, /admin/
+# admin / admin; pages: /, /editors/, /my-letter/, /docs/, /admin/
 
 # new migration for the package:
 DJANGO_SETTINGS_MODULE=tests.settings python -c "import sys;sys.path[:0]=['.','src'];import django;django.setup();from django.core.management import call_command;call_command('makemigrations','templates_pro')"
@@ -96,7 +96,9 @@ DJANGO_SETTINGS_MODULE=tests.settings python -c "import sys;sys.path[:0]=['.','s
 - User-visible strings in Django code use `gettext_lazy`. The editor UI is English (i18n is a roadmap item).
 - Tests: add a test for every bug fix; security-relevant changes need a test in `test_compiler.py` /
   `test_engine.py`. Tests use `tests/testapp/doctemplate_types.py` (types `invoice`, `letter`).
-- Docs live in `docs/*.md`; update the relevant page in the same change.
+- Docs live in `docs/*.md`; update the relevant page in the same change. `docs/index.md` lists
+  them in reading order; the demo serves them at `/docs/` (`example/demo/docs.py` holds the same
+  order in `SECTIONS`, and `example/demo/markdown.py` is the converter). Add a new page to both.
 - Line length 100, ruff rules in `pyproject.toml`.
 
 ## Editor notes (frontend/src)

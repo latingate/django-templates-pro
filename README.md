@@ -85,32 +85,44 @@ optional PDF engine ([rendering.md](docs/rendering.md#pdf-engines)).
 
 ## Try the demo
 
+From a clone of the repository (the demo is not in the pip package):
+
 ```bash
-cd example
-python manage.py migrate && python manage.py seed_demo
-python manage.py runserver        # http://127.0.0.1:8000  (admin / admin)
+python example/run_demo.py        # http://127.0.0.1:8000  (admin / admin)
 ```
+
+The script works from any folder and with any Python 3.10+. It creates `.venv` if no
+virtual environment is active, installs the package, migrates, loads the demo content
+on the first run, and starts the server. The manual steps are in
+[docs/samples.md](docs/samples.md#run-it).
 
 The demo has six templates (an English and a Hebrew right-to-left invoice, a
 modern invoice, a letter, an order email and an HR certificate), seven shared
 blocks (one of them nested), constants, document themes (one of them a
 project theme), every editor preset and skin, and a user-facing editor page.
+It also serves this documentation at <http://127.0.0.1:8000/docs/>.
 
 ## Documentation
+
+The full list, in reading order, is in [docs/index.md](docs/index.md).
 
 | | |
 |---|---|
 | [**Setup guide**](SETUP.md) | step-by-step local setup, demo, PyCharm, Windows PDF, troubleshooting |
 | [Installation](docs/installation.md) | requirements, settings, URLs, system libraries |
 | [Quickstart](docs/quickstart.md) | first template type, first template, first PDF |
+| [Samples, demo and examples](docs/samples.md) | the packaged samples, the demo project and the sample HTML files, and how to use them |
 | [Concepts](docs/concepts.md) | variables, constants, dynamic values, blocks, repeats, conditions |
 | [Template types](docs/template-types.md) | schemas, `build_context`, samples, locale & currency hooks |
-| [Formatting](docs/formatting.md) | date/number/money/text format reference |
+| [Formatting](docs/formatting.md) | how formatting works; date/number/money/text format reference |
 | [The editor](docs/editor.md) | widget options, presets, skins, toolbar, JS API, styling |
+| [The admin](docs/admin.md) | templates, blocks, constants, generated documents, previews, permissions |
 | [Rendering](docs/rendering.md) | services API, formats, themes, page setup, stored documents, custom renderers |
 | [Security](docs/security.md) | the sandbox, sanitising, URL fetching, permissions |
 | [Settings](docs/settings.md) | `TEMPLATES_PRO` reference |
-| [Operations](docs/operations.md) | validation command, caching, migrations, upgrades |
+| [Management commands](docs/commands.md) | `templates_pro_validate`, `templates_pro_samples`, `seed_demo` |
+| [Operations](docs/operations.md) | schema changes, caching, migrations, upgrades |
+| [Troubleshooting](docs/troubleshooting.md) | symptoms, causes and fixes |
 | [HTML contract](docs/html-contract.md) | the chip markup shared by editor and compiler |
 | [Development](docs/development.md) | repo layout, tests, building the editor bundle |
 
