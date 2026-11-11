@@ -61,6 +61,25 @@ Override a default per variable with `format=`, for example
 Names must be identifiers. Root names cannot be `const`, `loop` or anything
 starting with `tp_`; `register()` raises `ImproperlyConfigured` otherwise.
 
+### What the schema is used for
+
+- **The editor's picker.** Every registered type is sent to the editor as
+  JSON (`TemplateType.to_json()`: names, paths, labels, types and default
+  formats; sample values are not sent). The editor shows the type selected by
+  the widget's `template_type` or `type_field`, and merges the schemas when a
+  block declares several types.
+- **Chip labels and format options.** A chip stores only the path
+  (`customer.name`). Its label (`Customer › Contact name`) and the options in
+  its format popover come from the schema.
+- **Validation on save.** The compiler resolves every path against the schema
+  on the server and rejects unknown ones.
+- **Preview data**, through `sample_context()`.
+
+The schema is not consulted when a real document is rendered. Then only the
+dict from `build_context()` matters, so keep the two in the same shape: a
+field you return but don't declare cannot be inserted in the editor, and a
+field you declare but don't return renders empty.
+
 ### Sharing groups between types
 
 Reuse a `Group` object across types, as in the demo's `CUSTOMER`. A block
@@ -89,6 +108,39 @@ def build_context(self, invoice, **kwargs):
 
 Keys not in the schema are allowed and simply unused. Missing keys render as
 empty (or as the chip's fallback text).
+
+### Data from several models
+
+`build_context()` is ordinary Python, so one document can combine any number
+of sources. Start from the object you were given and collect the rest:
+
+| Source | Example |
+|---|---|
+| Fields of the main object | `invoice.number` |
+| A related object (foreign key) | `invoice.customer` → the `customer` group |
+| A related set, as a list of dicts | `invoice.lines.all()` → a `ListOf` |
+| Objects passed by the caller | `render(tpl, customer, sender=request.user)` |
+| Any other query or computed value | an open balance summed from unpaid invoices |
+
+Objects that cannot be reached from the main object are passed to `render()`
+as keyword arguments and arrive as keyword arguments here:
+
+```python
+# view
+render_to_response("welcome-letter", customer, fmt="pdf", sender=request.user)
+
+# type
+def build_context(self, customer, *, sender=None, **kwargs):
+    unpaid = [i for i in customer.invoices.all() if not i.paid]
+    return {
+        "customer": {"name": customer.name, "company": customer.company},
+        "sender": {"name": sender.get_full_name() if sender else ""},
+        "account": {"open_invoices": len(unpaid),
+                    "balance": sum((i.total for i in unpaid), Decimal("0"))},
+    }
+```
+
+Blocks included by the template read from this same dict.
 
 You can skip `build_context` by passing data directly:
 `render(template, data={...})`.

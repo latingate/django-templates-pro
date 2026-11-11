@@ -14,6 +14,28 @@ python manage.py runserver
 | `/my-letter/` | a user-facing page where a user writes and renders their own template |
 | `/admin/` | templates, blocks (with "used by"), constants, generated documents |
 
+## How the demo pages get their data
+
+`/editors/` and the editor's **Preview** never touch real records. The chips
+show field labels, and the preview is filled with the `sample=` values from
+the schemas in `demo/doctemplate_types.py` (for example the `CUSTOMER`
+group's "Jane Roe").
+
+Real records are used by the links on `/`, which point at
+`/doc/<slug>/<pk>.<fmt>`, e.g. `/doc/invoice-hebrew/1.html`. The view is
+`demo.views.document`:
+
+1. It loads the `DocumentTemplate` with that slug.
+2. `SOURCES` in `demo/views.py` maps the template's type to a model
+   (`"invoice"` → `Invoice`), and the view loads that model's row with the
+   given `pk`.
+3. It calls `render_to_response(tpl, obj, fmt=fmt, request=request)`.
+4. `InvoiceTemplate.build_context()` turns the invoice, its lines and its
+   customer into the plain dict the template reads.
+
+`SOURCES` is demo code, not part of the package: in your project the view
+decides which object to pass to `render()`.
+
 ## What's inside
 
 - **Template types** (`demo/doctemplate_types.py`): invoice, customer letter,
