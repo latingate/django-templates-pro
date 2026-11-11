@@ -1,0 +1,79 @@
+{% extends "demo/base.html" %}
+{% block title %}{% if doc %}{{ doc.title }} · {% endif %}Documentation · django-templates-pro{% endblock %}
+{% block head %}
+<style>
+  main { max-width: 1240px; }
+  .docs { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 32px; align-items: start; }
+  .docs nav { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow: auto; font-size: 14px; }
+  .docs nav h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: #64748b; margin: 18px 0 6px; }
+  .docs nav h2:first-child { margin-top: 0; }
+  .docs nav a { display: block; padding: 4px 10px; border-radius: 6px; color: #1f2937; text-decoration: none; }
+  .docs nav a:hover { background: #e2e8f0; }
+  .docs nav a.current { background: #0f766e; color: #fff; }
+  .docs nav .toc a { padding: 2px 10px 2px 22px; font-size: 13px; color: #475569; }
+  .docs nav .toc a.l3 { padding-left: 34px; }
+  .doc { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 28px 34px; min-width: 0; }
+  .doc .path { color: #64748b; font-size: 13px; margin: 0 0 14px; }
+  .doc h1 { font-size: 28px; margin: 0 0 14px; }
+  .doc h2 { font-size: 21px; margin: 32px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #e2e8f0; }
+  .doc h3 { font-size: 17px; margin: 24px 0 8px; }
+  .doc h4 { font-size: 15px; margin: 18px 0 6px; }
+  .doc p, .doc ul, .doc ol { margin: 0 0 12px; }
+  .doc li { margin: 3px 0; }
+  .doc li > ul, .doc li > ol { margin: 4px 0; }
+  .doc a { color: #0f766e; }
+  .doc pre { background: #0f172a; color: #e2e8f0; padding: 14px 16px; border-radius: 8px; overflow: auto; margin: 0 0 14px; font-size: 13px; line-height: 1.5; }
+  .doc pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+  .doc code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .doc .table-wrap { overflow-x: auto; margin: 0 0 14px; }
+  .doc table { border-collapse: collapse; font-size: 14px; }
+  .doc th, .doc td { border: 1px solid #e2e8f0; padding: 7px 10px; text-align: left; vertical-align: top; }
+  .doc th { background: #f1f5f9; }
+  .doc blockquote { margin: 0 0 14px; padding: 8px 16px; border-left: 4px solid #0f766e; background: #f0fdfa; }
+  .doc blockquote p:last-child { margin-bottom: 0; }
+  .doc hr { border: 0; border-top: 1px solid #e2e8f0; margin: 24px 0; }
+  .doc :target { scroll-margin-top: 16px; background: #fef9c3; }
+  .pager { display: flex; justify-content: space-between; gap: 16px; margin-top: 30px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 14px; }
+  .index-list { list-style: none; padding: 0; margin: 0 0 8px; }
+  .index-list li { padding: 5px 0; border-bottom: 1px solid #f1f5f9; }
+  .index-list code { float: right; color: #64748b; background: none; }
+  @media (max-width: 860px) { .docs { grid-template-columns: 1fr; } .docs nav { position: static; max-height: none; } }
+</style>
+{% endblock %}
+{% block content %}
+<div class="docs">
+  <nav>
+    {% for section, items in sections %}
+      <h2>{{ section }}</h2>
+      {% for item in items %}
+        <a href="{{ item.url }}"{% if doc and item.slug == doc.slug %} class="current"{% endif %}>{{ item.title }}</a>
+        {% if doc and item.slug == doc.slug and toc %}
+          <div class="toc">{% for level, anchor, title in toc %}<a class="l{{ level }}" href="#{{ anchor }}">{{ title }}</a>{% endfor %}</div>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </nav>
+  <article class="doc">
+    {% if doc %}
+      <p class="path"><a href="{% url 'docs_index' %}">Documentation</a> › <code>{{ doc.path }}</code></p>
+      {{ body|safe }}
+      <div class="pager">
+        <span>{% if previous %}← <a href="{{ previous.url }}">{{ previous.title }}</a>{% endif %}</span>
+        <span>{% if next %}<a href="{{ next.url }}">{{ next.title }}</a> →{% endif %}</span>
+      </div>
+    {% else %}
+      <h1>Documentation</h1>
+      <p>Every Markdown file of this repository, in reading order. The pages are read from disk on
+      each request, so edits to a <code>.md</code> file show up on reload.</p>
+      {% for section, items in sections %}
+        <h2>{{ section }}</h2>
+        <ul class="index-list">
+          {% for item in items %}<li><a href="{{ item.url }}">{{ item.title }}</a> <code>{{ item.path }}</code></li>{% endfor %}
+        </ul>
+      {% empty %}
+        <p>No Markdown files were found next to the demo project.</p>
+      {% endfor %}
+    {% endif %}
+  </article>
+</div>
+{% endblock %}

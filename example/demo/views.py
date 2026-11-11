@@ -13,6 +13,7 @@ from templates_pro.services import render as render_document
 from templates_pro.services import render_to_response
 from templates_pro.widgets import TemplateEditorWidget
 
+from . import docs as docs_browser
 from .models import Customer, Employee, Invoice, Order
 
 # Which model feeds each template type in this project.
@@ -112,3 +113,24 @@ def user_letter(request):
             "<p>Dear <span data-tp=\"var\" data-path=\"customer.name\">Customer › Contact name</span>,</p>"
             "<p>…</p>")})
     return render(request, "demo/user_letter.html", {"form": form, "output": output, "tpl": tpl})
+
+
+def docs_index(request):
+    """Every Markdown file of the repository, grouped and in reading order."""
+    docs = docs_browser.catalogue()
+    return render(request, "demo/docs.html", {"sections": docs_browser.sections(docs)})
+
+
+def docs_page(request, slug):
+    docs = docs_browser.catalogue()
+    position = next((i for i, d in enumerate(docs) if d.slug == slug), None)
+    if position is None:
+        raise Http404
+    doc = docs[position]
+    body, toc = docs_browser.render(doc, docs)
+    return render(request, "demo/docs.html", {
+        "sections": docs_browser.sections(docs), "doc": doc, "body": body,
+        "toc": [(level, anchor, title) for level, anchor, title in toc if level in (2, 3)],
+        "previous": docs[position - 1] if position else None,
+        "next": docs[position + 1] if position + 1 < len(docs) else None,
+    })
