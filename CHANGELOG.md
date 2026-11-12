@@ -8,6 +8,10 @@
 - Demo: a documentation page at `/docs/` renders the repository's Markdown files.
 - Demo: `python example/run_demo.py` sets up and starts the demo in one command (virtual
   environment, install, migrate, seed on first run, runserver), from any folder.
+- Demo in the pip package: `python -m templates_pro.demo` (console script `templates-pro-demo`)
+  copies the demo project and its documentation into a folder of its own and runs it. The
+  wheel ships `example/` and the docs under `templates_pro/demo/project/`.
+- Project URLs on PyPI point at github.com/latingate/django-templates-pro.
 - Removed `docs/SETUP.md`, an outdated copy of `SETUP.md`.
 
 ## 0.2.0 — 2026-11-10

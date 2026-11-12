@@ -36,6 +36,11 @@ Support matrix: **Python 3.10+, Django 4.2+**. Don't use 3.11+ syntax/stdlib
 - `frontend/` = editor source (TipTap 3 + Vite, vanilla JS, no framework). The **built** bundle
   is committed in `src/templates_pro/static/templates_pro/editor/`. Consumers never need Node.
 - `example/` = demo project; `example/demo/samples/` = sample templates/blocks in stored-HTML form.
+  `example/run_demo.py` = one-command setup + runserver. The wheel also ships `example/` and the
+  docs (`force-include` in `pyproject.toml`) for `templates_pro/demo/` (`python -m templates_pro.demo`,
+  copies it to a folder and runs it; `DOC_FILES` there must match `force-include`). So the demo must
+  work outside the repository: `docs.py` reads `_docs/` in a copy, `manage.py` adds `src/` only if
+  present.
 
 ## Invariants — do not break
 

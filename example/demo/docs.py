@@ -14,7 +14,9 @@ from django.urls import reverse
 
 from .markdown import Markdown
 
-REPO = Path(__file__).resolve().parents[2]
+# A demo copied by `python -m templates_pro.demo` keeps the Markdown files in its _docs/ folder.
+_COPY = Path(__file__).resolve().parents[1] / "_docs"
+REPO = _COPY if _COPY.is_dir() else Path(__file__).resolve().parents[2]
 
 #: Where Markdown files are looked for (never node_modules, virtualenvs or build output).
 SEARCH = ("*.md", "docs/**/*.md", "example/*.md", "frontend/*.md")

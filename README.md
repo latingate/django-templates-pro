@@ -85,15 +85,18 @@ optional PDF engine ([rendering.md](docs/rendering.md#pdf-engines)).
 
 ## Try the demo
 
-From a clone of the repository (the demo is not in the pip package):
+After `pip install django-templates-pro`:
 
 ```bash
-python example/run_demo.py        # http://127.0.0.1:8000  (admin / admin)
+python -m templates_pro.demo      # http://127.0.0.1:8000  (admin / admin)
 ```
 
-The script works from any folder and with any Python 3.10+. It creates `.venv` if no
-virtual environment is active, installs the package, migrates, loads the demo content
-on the first run, and starts the server. The manual steps are in
+It copies the demo project into `./templates-pro-demo` (another folder: `--dir`),
+migrates its own SQLite database, loads the demo content and starts the server. It
+never touches your own project. Run the same command again to restart it.
+
+From a clone of the repository, `python example/run_demo.py` does the same in place,
+and also creates `.venv` and installs the package when needed. Details are in
 [docs/samples.md](docs/samples.md#run-it).
 
 The demo has six templates (an English and a Hebrew right-to-left invoice, a

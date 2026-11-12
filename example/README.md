@@ -4,6 +4,9 @@
 python run_demo.py             # does everything below, then starts the server
 ```
 
+With only the pip package (no clone), `python -m templates_pro.demo` copies this
+folder somewhere else and runs it the same way.
+
 Or step by step, in an active virtual environment:
 
 ```bash

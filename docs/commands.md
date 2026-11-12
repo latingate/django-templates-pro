@@ -11,6 +11,9 @@ The package adds two `manage.py` commands. The demo project adds a third.
 Django's own `check` command also reports configuration problems; the IDs
 are listed in [settings.md](settings.md#system-checks).
 
+The demo website itself starts with `python -m templates_pro.demo` (no
+`manage.py` needed, see [samples.md](samples.md#run-it)).
+
 ## templates_pro_validate
 
 ```bash

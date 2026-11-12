@@ -6,7 +6,7 @@ one is for and how to use it.
 | Set | Where | Use it to |
 |---|---|---|
 | [Packaged samples](#packaged-samples) | `templates_pro.samples` (installed with pip) | get working templates into **your own project** in two commands |
-| [Demo project](#demo-project) | `example/` (repository only) | see every feature running, with real records, before integrating |
+| [Demo project](#demo-project) | `example/` (repository), `python -m templates_pro.demo` (pip) | see every feature running, with real records, before integrating |
 | [Stored-HTML files](#the-sample-html-files) | `example/demo/samples/`, `src/templates_pro/samples/content/` | read or copy the markup the editor produces |
 
 There are also [code examples](#code-examples) to copy from.
@@ -149,11 +149,25 @@ their type shows as *unregistered*.
 ## Demo project
 
 A complete Django project in `example/`, with models, real records and pages
-outside the admin. It is in the repository, not in the pip package.
+outside the admin. It ships in the pip package too, so you can run it without
+cloning the repository.
 
 ### Run it
 
-One command, from the repository root (or give the script's path from anywhere):
+**After `pip install django-templates-pro`**, from any folder:
+
+```bash
+python -m templates_pro.demo                    # or: templates-pro-demo
+python -m templates_pro.demo --dir mydemo 8001  # another folder; other arguments go to runserver
+```
+
+The first run copies the demo project into `./templates-pro-demo`, with its own
+SQLite database and a copy of this documentation for its `/docs/` page. Later
+runs reuse that folder; delete it to start again. Your own project and its
+database are never touched.
+
+**From a clone of the repository**, from the repository root (or give the
+script's path from anywhere):
 
 ```bash
 python example/run_demo.py    # extra arguments go to runserver, e.g. 8001

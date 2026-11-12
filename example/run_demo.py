@@ -12,7 +12,10 @@ Each step only runs when it is needed:
 3. It runs `migrate`, and `seed_demo` when the database has no templates yet.
 4. It starts `runserver`.
 
-To reload the demo content later: `python manage.py seed_demo --reset` (in example/).
+Steps 1 and 2 only apply in the repository; a copy made by `python -m templates_pro.demo`
+uses the Python that runs it.
+
+To reload the demo content later: `python manage.py seed_demo --reset` (in this folder).
 """
 
 from __future__ import annotations
@@ -25,6 +28,8 @@ from pathlib import Path
 EXAMPLE = Path(__file__).resolve().parent
 REPO = EXAMPLE.parent
 VENV = REPO / ".venv"
+# Present in the repository, absent in a copy made by `python -m templates_pro.demo`.
+IN_REPO = (REPO / "src" / "templates_pro").is_dir()
 REQUIRED = ("django", "jinja2", "babel", "html2text", "typst", "docx")
 
 
@@ -45,8 +50,11 @@ def venv_python() -> Path:
 
 
 def ensure_dependencies() -> None:
-    if not missing_modules():
+    missing = missing_modules()
+    if not missing:
         return
+    if not IN_REPO:
+        sys.exit(f"Missing modules: {', '.join(missing)}. Run: pip install django-templates-pro")
     if not in_venv():
         if not venv_python().exists():
             print(f"Creating a virtual environment in {VENV} ...")
@@ -68,7 +76,7 @@ def setup_database() -> None:
 
 
 def main() -> None:
-    if sys.version_info < (3, 10):
+    if sys.version_info < (3, 10):  # noqa: UP036 (users may run it with an old Python)
         sys.exit("The demo needs Python 3.10 or newer.")
     # runserver's autoreloader re-runs this script in a child process with RUN_MAIN set:
     # the parent has already done the setup.
@@ -76,7 +84,7 @@ def main() -> None:
     if first_run:
         ensure_dependencies()
 
-    sys.path[:0] = [str(EXAMPLE), str(REPO / "src")]
+    sys.path[:0] = [str(EXAMPLE), str(REPO / "src")] if IN_REPO else [str(EXAMPLE)]
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "exampleproject.settings")
     import django
     from django.core.management import execute_from_command_line
