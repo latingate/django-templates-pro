@@ -18,6 +18,9 @@ from .markdown import Markdown
 _COPY = Path(__file__).resolve().parents[1] / "_docs"
 REPO = _COPY if _COPY.is_dir() else Path(__file__).resolve().parents[2]
 
+#: Links to this prefix are links to repository files (README.md uses them, for PyPI).
+GITHUB = "https://github.com/latingate/django-templates-pro/blob/master/"
+
 #: Where Markdown files are looked for (never node_modules, virtualenvs or build output).
 SEARCH = ("*.md", "docs/**/*.md", "example/*.md", "frontend/*.md")
 
@@ -114,13 +117,14 @@ def render(doc: Doc, docs: list[Doc]) -> tuple[str, list[tuple[int, str, str]]]:
     by_path = {d.path: d for d in docs}
 
     def resolve(target: str) -> str | None:
-        if target.startswith("#") or "://" in target or target.startswith("mailto:"):
+        on_github = target.startswith(GITHUB)
+        if not on_github and (target.startswith("#") or "://" in target or target.startswith("mailto:")):
             return target
-        path, _, anchor = target.partition("#")
-        full = posixpath.normpath(posixpath.join(posixpath.dirname(doc.path), path))
+        path, _, anchor = target.removeprefix(GITHUB).partition("#")
+        full = path if on_github else posixpath.normpath(posixpath.join(posixpath.dirname(doc.path), path))
         other = by_path.get(full)
         if other is None:
-            return None
+            return target if on_github else None
         return other.url + (f"#{anchor}" if anchor else "")
 
     md = Markdown(resolve_link=resolve)

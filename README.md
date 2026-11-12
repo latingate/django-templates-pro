@@ -46,7 +46,7 @@ python manage.py migrate
 Want something to look at first? Add `"templates_pro.samples"` to `INSTALLED_APPS` and run
 `python manage.py templates_pro_samples`: six ready-made templates (one Hebrew, right-to-left),
 seven shared blocks and constants appear in the admin, with working previews
-([sample content](docs/quickstart.md#start-from-the-samples-optional)).
+([sample content](https://github.com/latingate/django-templates-pro/blob/master/docs/quickstart.md#start-from-the-samples-optional)).
 
 Then declare what can be templated, in any app's `doctemplate_types.py`:
 
@@ -81,7 +81,7 @@ Open **Admin → Document templates**, pick the type, and write.
 
 Requirements: Python 3.10+ and Django 4.2+. That's all: PDF output uses the
 `typst` wheel and bundled fonts (Latin + Hebrew). WeasyPrint is available as an
-optional PDF engine ([rendering.md](docs/rendering.md#pdf-engines)).
+optional PDF engine ([rendering.md](https://github.com/latingate/django-templates-pro/blob/master/docs/rendering.md#pdf-engines)).
 
 ## Try the demo
 
@@ -97,7 +97,7 @@ never touches your own project. Run the same command again to restart it.
 
 From a clone of the repository, `python example/run_demo.py` does the same in place,
 and also creates `.venv` and installs the package when needed. Details are in
-[docs/samples.md](docs/samples.md#run-it).
+[docs/samples.md](https://github.com/latingate/django-templates-pro/blob/master/docs/samples.md#run-it).
 
 The demo has six templates (an English and a Hebrew right-to-left invoice, a
 modern invoice, a letter, an order email and an HR certificate), seven shared
@@ -107,27 +107,27 @@ It also serves this documentation at <http://127.0.0.1:8000/docs/>.
 
 ## Documentation
 
-The full list, in reading order, is in [docs/index.md](docs/index.md).
+The full list, in reading order, is in [docs/index.md](https://github.com/latingate/django-templates-pro/blob/master/docs/index.md).
 
 | | |
 |---|---|
-| [**Setup guide**](SETUP.md) | step-by-step local setup, demo, PyCharm, Windows PDF, troubleshooting |
-| [Installation](docs/installation.md) | requirements, settings, URLs, system libraries |
-| [Quickstart](docs/quickstart.md) | first template type, first template, first PDF |
-| [Samples, demo and examples](docs/samples.md) | the packaged samples, the demo project and the sample HTML files, and how to use them |
-| [Concepts](docs/concepts.md) | variables, constants, dynamic values, blocks, repeats, conditions |
-| [Template types](docs/template-types.md) | schemas, `build_context`, samples, locale & currency hooks |
-| [Formatting](docs/formatting.md) | how formatting works; date/number/money/text format reference |
-| [The editor](docs/editor.md) | widget options, presets, skins, toolbar, JS API, styling |
-| [The admin](docs/admin.md) | templates, blocks, constants, generated documents, previews, permissions |
-| [Rendering](docs/rendering.md) | services API, formats, themes, page setup, stored documents, custom renderers |
-| [Security](docs/security.md) | the sandbox, sanitising, URL fetching, permissions |
-| [Settings](docs/settings.md) | `TEMPLATES_PRO` reference |
-| [Management commands](docs/commands.md) | `templates_pro_validate`, `templates_pro_samples`, `seed_demo` |
-| [Operations](docs/operations.md) | schema changes, caching, migrations, upgrades |
-| [Troubleshooting](docs/troubleshooting.md) | symptoms, causes and fixes |
-| [HTML contract](docs/html-contract.md) | the chip markup shared by editor and compiler |
-| [Development](docs/development.md) | repo layout, tests, building the editor bundle |
+| [**Setup guide**](https://github.com/latingate/django-templates-pro/blob/master/SETUP.md) | step-by-step local setup, demo, PyCharm, Windows PDF, troubleshooting |
+| [Installation](https://github.com/latingate/django-templates-pro/blob/master/docs/installation.md) | requirements, settings, URLs, system libraries |
+| [Quickstart](https://github.com/latingate/django-templates-pro/blob/master/docs/quickstart.md) | first template type, first template, first PDF |
+| [Samples, demo and examples](https://github.com/latingate/django-templates-pro/blob/master/docs/samples.md) | the packaged samples, the demo project and the sample HTML files, and how to use them |
+| [Concepts](https://github.com/latingate/django-templates-pro/blob/master/docs/concepts.md) | variables, constants, dynamic values, blocks, repeats, conditions |
+| [Template types](https://github.com/latingate/django-templates-pro/blob/master/docs/template-types.md) | schemas, `build_context`, samples, locale & currency hooks |
+| [Formatting](https://github.com/latingate/django-templates-pro/blob/master/docs/formatting.md) | how formatting works; date/number/money/text format reference |
+| [The editor](https://github.com/latingate/django-templates-pro/blob/master/docs/editor.md) | widget options, presets, skins, toolbar, JS API, styling |
+| [The admin](https://github.com/latingate/django-templates-pro/blob/master/docs/admin.md) | templates, blocks, constants, generated documents, previews, permissions |
+| [Rendering](https://github.com/latingate/django-templates-pro/blob/master/docs/rendering.md) | services API, formats, themes, page setup, stored documents, custom renderers |
+| [Security](https://github.com/latingate/django-templates-pro/blob/master/docs/security.md) | the sandbox, sanitising, URL fetching, permissions |
+| [Settings](https://github.com/latingate/django-templates-pro/blob/master/docs/settings.md) | `TEMPLATES_PRO` reference |
+| [Management commands](https://github.com/latingate/django-templates-pro/blob/master/docs/commands.md) | `templates_pro_validate`, `templates_pro_samples`, `seed_demo` |
+| [Operations](https://github.com/latingate/django-templates-pro/blob/master/docs/operations.md) | schema changes, caching, migrations, upgrades |
+| [Troubleshooting](https://github.com/latingate/django-templates-pro/blob/master/docs/troubleshooting.md) | symptoms, causes and fixes |
+| [HTML contract](https://github.com/latingate/django-templates-pro/blob/master/docs/html-contract.md) | the chip markup shared by editor and compiler |
+| [Development](https://github.com/latingate/django-templates-pro/blob/master/docs/development.md) | repo layout, tests, building the editor bundle |
 
 ## License
 

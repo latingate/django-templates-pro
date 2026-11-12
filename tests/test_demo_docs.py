@@ -101,10 +101,14 @@ def test_every_doc_is_listed_and_its_links_resolve():
     for doc in docs:
         source = re.sub(r"```.*?```", "", (REPO / doc.path).read_text(encoding="utf-8"), flags=re.S)
         for target in re.findall(r"\]\(([^)\s]+)\)", source):
-            if target.startswith(("http", "mailto:")):
+            on_github = target.startswith(docs_module.GITHUB)
+            if target.startswith(("http", "mailto:")) and not on_github:
                 continue
-            path, _, anchor = target.partition("#")
-            full = posixpath.normpath(posixpath.join(posixpath.dirname(doc.path), path)) if path else doc.path
+            path, _, anchor = target.removeprefix(docs_module.GITHUB).partition("#")
+            if on_github:
+                full = path
+            else:
+                full = posixpath.normpath(posixpath.join(posixpath.dirname(doc.path), path)) if path else doc.path
             assert full in paths, f"{doc.path}: link to {target} leaves the documentation"
             assert not anchor or anchor in anchors[full], f"{doc.path}: no heading for {target}"
 

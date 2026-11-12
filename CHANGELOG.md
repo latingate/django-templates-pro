@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-11-12
+
+**The demo website ships with pip.**
 
 - Docs: new pages for the admin, the samples and demo, the management commands and
   troubleshooting; "how formatting works" in `docs/formatting.md`; where document data comes
@@ -11,7 +13,8 @@
 - Demo in the pip package: `python -m templates_pro.demo` (console script `templates-pro-demo`)
   copies the demo project and its documentation into a folder of its own and runs it. The
   wheel ships `example/` and the docs under `templates_pro/demo/project/`.
-- Project URLs on PyPI point at github.com/latingate/django-templates-pro.
+- Project URLs on PyPI point at github.com/latingate/django-templates-pro, and README links
+  are absolute so they work on the PyPI page (the demo's `/docs/` still opens them in place).
 - Removed `docs/SETUP.md`, an outdated copy of `SETUP.md`.
 
 ## 0.2.0 — 2026-11-10
