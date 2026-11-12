@@ -4,6 +4,8 @@
 
 **The demo website ships with pip.**
 
+- Tested on Python 3.14 and Django 6.0 / 6.1 (classifiers and the nox matrix).
+
 - Docs: new pages for the admin, the samples and demo, the management commands and
   troubleshooting; "how formatting works" in `docs/formatting.md`; where document data comes
   from in `docs/concepts.md`. `docs/index.md` lists every page in reading order.

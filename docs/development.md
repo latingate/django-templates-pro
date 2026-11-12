@@ -31,7 +31,7 @@ docs/
 ```bash
 pip install -e ".[dev]"        # or: pip install -r requirements-dev.txt
 pytest                       # about 140 tests, under 10 s
-nox                          # Python 3.10–3.13 × Django 4.2 / 5.1 / 5.2
+nox                          # Python 3.10–3.14 × Django 4.2 / 5.1 / 5.2 / 6.0 / 6.1
 ruff check .
 ```
 

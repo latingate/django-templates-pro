@@ -78,7 +78,7 @@ Support matrix: **Python 3.10+, Django 4.2+**. Don't use 3.11+ syntax/stdlib
 pip install -e ".[dev]"            # or -r requirements-dev.txt (no system libraries needed)
 pytest                             # whole suite (~140 tests), <10s
 pytest tests/test_compiler.py -q   # compiler/sanitiser
-nox                                # py3.10–3.13 × Django 4.2/5.1/5.2
+nox                                # py3.10–3.14 × Django 4.2/5.1/5.2/6.0/6.1
 ruff check .
 
 cd frontend && npm install

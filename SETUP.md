@@ -336,13 +336,12 @@ git tag v0.1.0
 git push --tags
 ```
 
-Before pushing, update the placeholder URLs in `pyproject.toml`
-(`[project.urls]`, currently `github.com/peltransport/...`) to your real
-repository.
+The URLs in `pyproject.toml` (`[project.urls]`) point at
+`github.com/latingate/django-templates-pro`; change them if the repository moves.
 
 The included GitHub Actions workflow (`.github/workflows/ci.yml`) runs the
-tests on Python 3.10–3.13 × Django 4.2 / 5.1 / 5.2, builds the editor bundle,
-and lints on every push.
+tests on Python 3.10–3.14 × Django 4.2 / 5.1 / 5.2 / 6.0 / 6.1, builds the editor bundle,
+and lints on every push to `master` and every pull request.
 
 ## 11. Use the package in your other Django projects
 

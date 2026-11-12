@@ -4,12 +4,15 @@ import nox
 
 nox.options.reuse_existing_virtualenvs = True
 
-DJANGO = {"4.2": "Django>=4.2,<5.0", "5.1": "Django>=5.1,<5.2", "5.2": "Django>=5.2,<6.0"}
+DJANGO = {"4.2": "Django>=4.2,<5.0", "5.1": "Django>=5.1,<5.2", "5.2": "Django>=5.2,<6.0",
+          "6.0": "Django>=6.0,<6.1", "6.1": "Django>=6.1,<6.2"}
 
 
-@nox.session(python=["3.10", "3.11", "3.12", "3.13"])
+@nox.session(python=["3.10", "3.11", "3.12", "3.13", "3.14"])
 @nox.parametrize("django", list(DJANGO))
 def tests(session, django):
+    if django >= "6" and session.python in ("3.10", "3.11"):
+        session.skip("Django 6 needs Python 3.12+")
     session.install(DJANGO[django])
     session.install("-e", ".[dev]")
     session.run("pytest", *session.posargs)
