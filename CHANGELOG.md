@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Demo: the header link to the documents page reads "Sample Documents".
+
 ## 0.3.2 — 2026-11-16
 
 - Docs: running the demo from PyCharm, for a clone of the repository and for a demo folder
