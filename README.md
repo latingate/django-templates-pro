@@ -79,7 +79,7 @@ class InvoiceTemplate(TemplateType):
 
 Open **Admin → Document templates**, pick the type, and write.
 
-Requirements: Python 3.10+ and Django 4.2+. That's all: PDF output uses the
+Requirements: Python 3.10+ and Django 4.2+ (on Python 3.14: Django 5.2.8+). That's all: PDF output uses the
 `typst` wheel and bundled fonts (Latin + Hebrew). WeasyPrint is available as an
 optional PDF engine ([rendering.md](https://github.com/latingate/django-templates-pro/blob/master/docs/rendering.md#pdf-engines)).
 

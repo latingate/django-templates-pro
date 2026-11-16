@@ -3,7 +3,8 @@
 ## Requirements
 
 - Python 3.10+
-- Django 4.2+ (tested on 4.2 LTS, 5.0, 5.1 and 5.2)
+- Django 4.2+ (tested on 4.2 LTS, 5.1, 5.2, 6.0 and 6.1). On Python 3.14, use Django 5.2.8
+  or newer: older Django versions do not run on Python 3.14.
 - `django.contrib.contenttypes` (used by the GeneratedDocument model) and
   `django.contrib.staticfiles` (serves the editor bundle and themes)
 

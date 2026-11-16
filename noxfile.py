@@ -13,6 +13,8 @@ DJANGO = {"4.2": "Django>=4.2,<5.0", "5.1": "Django>=5.1,<5.2", "5.2": "Django>=
 def tests(session, django):
     if django >= "6" and session.python in ("3.10", "3.11"):
         session.skip("Django 6 needs Python 3.12+")
+    if session.python == "3.14" and django in ("4.2", "5.1"):
+        session.skip("Python 3.14 needs Django 5.2.8+")
     session.install(DJANGO[django])
     session.install("-e", ".[dev]")
     session.run("pytest", *session.posargs)

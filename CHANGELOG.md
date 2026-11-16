@@ -4,7 +4,8 @@
 
 **The demo website ships with pip.**
 
-- Tested on Python 3.14 and Django 6.0 / 6.1 (classifiers and the nox matrix).
+- Tested on Python 3.14 and Django 6.0 / 6.1 (classifiers, nox and CI matrices). Python 3.14
+  needs Django 5.2.8+: Django 4.2 and 5.1 do not run on it.
 
 - Docs: new pages for the admin, the samples and demo, the management commands and
   troubleshooting; "how formatting works" in `docs/formatting.md`; where document data comes
