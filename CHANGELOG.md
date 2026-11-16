@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 — 2026-11-16
+
+**Text direction per paragraph.** Also includes 0.3.2, which was tagged but not published
+to PyPI.
 
 - **Text direction per paragraph.** A new toolbar button, `textDirection` (in the `full`
   preset), switches the selected paragraphs between right to left and left to right, using
