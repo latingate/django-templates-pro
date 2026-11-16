@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.2 — 2026-11-16
 
 - Docs: running the demo from PyCharm, for a clone of the repository and for a demo folder
   made by `python -m templates_pro.demo` (`docs/samples.md`); `SETUP.md` mentions the shared
