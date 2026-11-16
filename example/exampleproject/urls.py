@@ -2,7 +2,9 @@ from demo import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.templatetags.static import static as static_url
 from django.urls import include, path
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -11,6 +13,7 @@ urlpatterns = [
     path("my-letter/", views.user_letter, name="user_letter"),
     path("docs/", views.docs_index, name="docs_index"),
     path("docs/<slug:slug>/", views.docs_page, name="docs_page"),
+    path("favicon.ico", RedirectView.as_view(url=static_url("demo/favicon.png"))),
     path("admin/", admin.site.urls),
     path("templates-pro/", include("templates_pro.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

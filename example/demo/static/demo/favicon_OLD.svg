@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Northwind diamond mark (from demo/logo.png) -->
+  <path d="M32 2 L52 32 L32 62 L12 32 Z" fill="#0f766e"/>
+  <path d="M32 2 L52 32 L32 32 Z" fill="#14a08f"/>
+  <circle cx="32" cy="32" r="6" fill="#fff"/>
+</svg>
