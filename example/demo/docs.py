@@ -21,6 +21,9 @@ REPO = _COPY if _COPY.is_dir() else Path(__file__).resolve().parents[2]
 #: Links to this prefix are links to repository files (README.md uses them, for PyPI).
 GITHUB = "https://github.com/latingate/django-templates-pro/blob/master/"
 
+#: Maintainer pages left out of the viewer; links to them open on GitHub.
+HIDDEN = {"docs/releasing.md"}
+
 #: Where Markdown files are looked for (never node_modules, virtualenvs or build output).
 SEARCH = ("*.md", "docs/**/*.md", "example/*.md", "frontend/*.md")
 
@@ -53,7 +56,6 @@ SECTIONS: list[tuple[str, list[str]]] = [
     ]),
     ("Working on the package", [
         "docs/development.md",
-        "docs/releasing.md",
         "frontend/README.md",
         "CHANGELOG.md",
         "CLAUDE.md",
@@ -95,7 +97,7 @@ def _title(path: str) -> str:
 def catalogue() -> list[Doc]:
     """All Markdown files, ordered by ``SECTIONS`` and then alphabetically."""
     found = sorted({p.relative_to(REPO).as_posix() for pattern in SEARCH for p in REPO.glob(pattern)
-                    if p.is_file()})
+                    if p.is_file()} - HIDDEN)
     docs, seen = [], set()
     for section, paths in SECTIONS:
         for path in paths:
@@ -123,6 +125,8 @@ def render(doc: Doc, docs: list[Doc]) -> tuple[str, list[tuple[int, str, str]]]:
             return target
         path, _, anchor = target.removeprefix(GITHUB).partition("#")
         full = path if on_github else posixpath.normpath(posixpath.join(posixpath.dirname(doc.path), path))
+        if full in HIDDEN:
+            return GITHUB + full + (f"#{anchor}" if anchor else "")
         other = by_path.get(full)
         if other is None:
             return target if on_github else None
