@@ -35,6 +35,7 @@ is running, the same pages are browsable at `/docs/`.
 
 ## Working on the package
 
-19. [Development](development.md): layout, tests, building the editor, releasing
-20. [Editor bundle](../frontend/README.md): the TipTap source
-21. [Changelog](../CHANGELOG.md)
+19. [Development](development.md): layout, tests, building the editor
+20. [Releasing](releasing.md): publishing a new version to PyPI, step by step
+21. [Editor bundle](../frontend/README.md): the TipTap source
+22. [Changelog](../CHANGELOG.md)

@@ -75,8 +75,5 @@ cd example && python manage.py runserver
 
 ## Releasing
 
-1. Update `__version__` in `src/templates_pro/__init__.py` and `CHANGELOG.md`.
-2. `cd frontend && npm run build`, then commit.
-3. `pytest && nox`
-4. `python -m build` and inspect the wheel (it should contain `static/templates_pro/editor/*`).
-5. Tag `vX.Y.Z`; publish to your index (`twine upload`, or install from the git tag).
+See [releasing.md](releasing.md): version, changelog, checks, build, smoke test, tag
+and upload to PyPI.

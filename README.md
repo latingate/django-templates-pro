@@ -128,6 +128,7 @@ The full list, in reading order, is in [docs/index.md](https://github.com/lating
 | [Troubleshooting](https://github.com/latingate/django-templates-pro/blob/master/docs/troubleshooting.md) | symptoms, causes and fixes |
 | [HTML contract](https://github.com/latingate/django-templates-pro/blob/master/docs/html-contract.md) | the chip markup shared by editor and compiler |
 | [Development](https://github.com/latingate/django-templates-pro/blob/master/docs/development.md) | repo layout, tests, building the editor bundle |
+| [Releasing](https://github.com/latingate/django-templates-pro/blob/master/docs/releasing.md) | publishing a new version to PyPI |
 
 ## License
 

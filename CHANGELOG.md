@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Docs: `docs/releasing.md`, how to publish a new version to PyPI.
+- Demo: removed old logo and favicon backups that shipped in 0.3.0.
+
 ## 0.3.0 — 2026-11-12
 
 **The demo website ships with pip.**

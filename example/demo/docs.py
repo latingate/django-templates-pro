@@ -53,6 +53,7 @@ SECTIONS: list[tuple[str, list[str]]] = [
     ]),
     ("Working on the package", [
         "docs/development.md",
+        "docs/releasing.md",
         "frontend/README.md",
         "CHANGELOG.md",
         "CLAUDE.md",
