@@ -188,6 +188,31 @@ python manage.py seed_demo    # content, records and the login admin / admin
 python manage.py runserver
 ```
 
+### Run it from PyCharm
+
+**From a clone of the repository:** open the repository folder. The shared run
+configuration **Demo server** (in `.idea/runConfigurations/`) starts the demo on
+port 8000 with the project interpreter. It needs PyCharm's Django support set
+once per machine, under **Settings → Languages & Frameworks → Django**: manage
+script `example/manage.py`, settings `exampleproject/settings.py`
+([SETUP.md](../SETUP.md#8-pycharm-configuration) has every field).
+
+**After `pip install django-templates-pro`:** create the demo folder once
+(`python -m templates_pro.demo`, then stop it with Ctrl+C) and open
+`templates-pro-demo` in PyCharm as a project. Choose the interpreter that has
+the package installed (**Settings → Project → Python Interpreter**). Then
+either:
+
+- right-click `run_demo.py` → **Run 'run_demo'**: it migrates and starts the
+  server, like the command line; or
+- add a **Django Server** run configuration with the working directory set to
+  the demo folder and `DJANGO_SETTINGS_MODULE=exampleproject.settings`, and
+  in the Django support settings set the project root to the demo folder,
+  settings `exampleproject/settings.py` and manage script `manage.py`.
+
+Use `exampleproject.settings` (a module path) for `DJANGO_SETTINGS_MODULE`,
+never `settings` or a file name.
+
 ### Pages
 
 | Page | What it shows |

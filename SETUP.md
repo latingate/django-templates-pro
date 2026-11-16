@@ -253,7 +253,9 @@ Then:
 - **Settings → Languages & Frameworks → Template Languages** → Template language: **Django**.
 - **Settings → Tools → Python Integrated Tools** → Default test runner: **pytest**.
 
-Run configuration: **Run → Edit Configurations → + → Django Server**
+The repository ships a ready run configuration, **Demo server**
+(`.idea/runConfigurations/Demo_server.xml`): with Django support set as above,
+pick it and press Run. To make one yourself: **Run → Edit Configurations → + → Django Server**
 
 | Field | Value |
 |---|---|

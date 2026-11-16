@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Docs: running the demo from PyCharm, for a clone of the repository and for a demo folder
+  made by `python -m templates_pro.demo` (`docs/samples.md`); `SETUP.md` mentions the shared
+  **Demo server** run configuration.
+
 ## 0.3.1 — 2026-11-16
 
 - Docs: `docs/releasing.md`, how to publish a new version to PyPI (not in the README table).
