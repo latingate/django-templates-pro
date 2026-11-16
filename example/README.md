@@ -18,7 +18,7 @@ python manage.py runserver
 
 | Page | What it shows |
 |---|---|
-| `/` | every template rendered for real records in each enabled format |
+| `/` | **Sample Generated Documents**: every template rendered for real records in each enabled format |
 | `/editors/` | the widget in all presets and skins, plus a custom toolbar, outside the admin |
 | `/my-letter/` | a user-facing page where a user writes and renders their own template |
 | `/docs/` | the documentation: every Markdown file of the repository, rendered and in reading order |

@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Demo: the header link to the documents page reads "Sample Documents".
+- Demo: the header link to the documents page reads "Sample Documents", and the page's heading
+  "Sample Generated Documents".
 
 ## 0.3.2 — 2026-11-16
 

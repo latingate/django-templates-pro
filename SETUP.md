@@ -200,7 +200,7 @@ python manage.py runserver
 
 | URL | What you'll see |
 |---|---|
-| <http://127.0.0.1:8000/> | every template rendered for real records, in each enabled format |
+| <http://127.0.0.1:8000/> | **Sample Generated Documents**: every template rendered for real records, in each enabled format |
 | <http://127.0.0.1:8000/editors/> | the editor in all presets and skins, outside the admin |
 | <http://127.0.0.1:8000/my-letter/> | a user-facing page where a user writes and renders a template |
 | <http://127.0.0.1:8000/docs/> | the documentation (every `.md` file of the repository), in reading order |

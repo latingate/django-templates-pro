@@ -217,7 +217,7 @@ never `settings` or a file name.
 
 | Page | What it shows |
 |---|---|
-| `/` | every template, with links that render it for real records in each enabled format |
+| `/` | **Sample Generated Documents**: every template, with links that render it for real records in each enabled format |
 | `/doc/<slug>/<pk>.<fmt>` | one document, e.g. `/doc/invoice-standard/1.pdf` |
 | `/editors/` | the editor widget in every preset and skin, plus a custom toolbar (login required) |
 | `/my-letter/` | a page where a non-admin user writes a template and renders it for a chosen customer (login required) |
