@@ -33,7 +33,7 @@ def test_refuses_a_folder_that_is_not_a_demo(tmp_path):
 
 
 def test_doc_files_match_the_wheel():
-    """DOC_FILES (editable installs) and pyproject's force-include (wheels) list the same files."""
-    pyproject = (REPO / "pyproject.toml").read_text(encoding="utf-8")
-    shipped = re.findall(r'^"([^"]+)" = "templates_pro/demo/project/_docs/', pyproject, flags=re.M)
+    """DOC_FILES (editable installs) and hatch_build.py (wheels) list the same files."""
+    hook = (REPO / "hatch_build.py").read_text(encoding="utf-8")
+    shipped = re.findall(r'^    "([^"]+)": f"{PROJECT}/_docs/', hook, flags=re.M)
     assert sorted(shipped) == sorted(demo.DOC_FILES)

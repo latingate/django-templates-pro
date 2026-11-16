@@ -4,6 +4,8 @@
 
 - Docs: `docs/releasing.md`, how to publish a new version to PyPI (not in the README table).
 - Demo: removed old logo and favicon backups that shipped in 0.3.0.
+- Packaging: the demo is added to real wheels by a build hook (`hatch_build.py`). Before, an
+  editable install (`pip install -e .`) also copied it into site-packages, where it went stale.
 
 ## 0.3.0 — 2026-11-12
 

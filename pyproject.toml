@@ -73,18 +73,11 @@ templates-pro-demo = "templates_pro.demo:main"
 packages = ["src/templates_pro"]
 exclude = ["**/db.sqlite3", "**/__pycache__", "**/*.pyc", "**/.DS_Store", "**/media", "**/staticfiles"]
 
-# The demo website, for `python -m templates_pro.demo` (DOC_FILES in templates_pro/demo/__init__.py).
-[tool.hatch.build.targets.wheel.force-include]
-"example" = "templates_pro/demo/project"
-"README.md" = "templates_pro/demo/project/_docs/README.md"
-"SETUP.md" = "templates_pro/demo/project/_docs/SETUP.md"
-"CHANGELOG.md" = "templates_pro/demo/project/_docs/CHANGELOG.md"
-"docs" = "templates_pro/demo/project/_docs/docs"
-"example/README.md" = "templates_pro/demo/project/_docs/example/README.md"
-"frontend/README.md" = "templates_pro/demo/project/_docs/frontend/README.md"
+# The demo website ships in real wheels only: see hatch_build.py.
+[tool.hatch.build.targets.wheel.hooks.custom]
 
 [tool.hatch.build.targets.sdist]
-include = ["src", "tests", "docs", "frontend/src", "frontend/scripts", "frontend/package.json", "frontend/package-lock.json", "frontend/vite.config.js", "frontend/README.md", "example", "README.md", "SETUP.md", "CHANGELOG.md", "LICENSE", "noxfile.py", "requirements*.txt"]
+include = ["src", "tests", "docs", "frontend/src", "frontend/scripts", "frontend/package.json", "frontend/package-lock.json", "frontend/vite.config.js", "frontend/README.md", "example", "README.md", "SETUP.md", "CHANGELOG.md", "LICENSE", "noxfile.py", "hatch_build.py", "requirements*.txt"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"

@@ -19,11 +19,11 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-#: The demo as shipped in the wheel (see ``force-include`` in pyproject.toml).
+#: The demo as shipped in the wheel (see hatch_build.py).
 PACKAGED = HERE / "project"
 #: The repository, for an editable install.
 REPO = HERE.parents[2]
-#: Files the demo's /docs/ page shows, copied into ``_docs/`` (keep in sync with pyproject.toml).
+#: Files the demo's /docs/ page shows, copied into ``_docs/`` (keep in sync with hatch_build.py).
 DOC_FILES = ("README.md", "SETUP.md", "CHANGELOG.md", "docs", "example/README.md", "frontend/README.md")
 IGNORE = shutil.ignore_patterns("db.sqlite3", "__pycache__", "*.pyc", "media", "staticfiles", ".DS_Store")
 
