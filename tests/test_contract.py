@@ -37,5 +37,5 @@ def test_roundtrip_compiles_identically(fixture):
     assert roundtrip.dynamic == original.dynamic
     assert _text(roundtrip.source) == _text(original.source)
     # Repeat/condition structure survives.
-    for tag in ("{% for ", "{% if ", '{% include "block:'):
+    for tag in ("{% for ", "{% if ", '{% include "block:', 'dir="rtl"', 'dir="ltr"'):
         assert roundtrip.source.count(tag) == original.source.count(tag)

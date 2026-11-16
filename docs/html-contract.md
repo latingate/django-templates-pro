@@ -16,6 +16,7 @@ examples.
 | Repeat section | `<div data-tp="repeat" data-path="order.items" data-as="item">…</div>` | `{% for item in tp_iter(order["items"]) %}…{% endfor %}` |
 | Repeated row | `<tr data-tp-repeat="invoice.lines" data-tp-as="line">…</tr>` | `{% for line in … %}<tr>…</tr>{% endfor %}` |
 | Condition | `<div data-tp="if" data-path="invoice.discount" data-op="gt" data-value="0">…</div>` | `{% if tp_test(invoice["discount"], "gt", "0") %}…{% endif %}` |
+| Text direction | `<p dir="rtl">…</p>` (also on `h1`–`h4`, `ul`, `ol`, `li`, `blockquote`, `td`, `th`) | kept as is |
 
 Rules:
 
@@ -28,6 +29,10 @@ Rules:
   schema root.
 - Condition operators: `truthy`, `falsy`, `eq`, `ne`, `gt`, `gte`, `lt`,
   `lte`, `contains`. Numeric comparison is used when both sides are numbers.
+- `dir` is `ltr` or `rtl` (`auto` is allowed and means no override; other
+  values are dropped). It overrides the first-letter rule for the element and
+  everything inside it, in HTML, PDF and DOCX. The editor only writes `ltr`
+  and `rtl`, and only when the user sets a direction.
 - Anything else is ordinary rich text filtered by the allowlist (see
   [security.md](security.md#4-html-sanitising)).
 

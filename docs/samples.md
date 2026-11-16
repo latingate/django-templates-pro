@@ -219,7 +219,7 @@ never `settings` or a file name.
 |---|---|
 | `/` | **Sample Generated Documents**: every template, with links that render it for real records in each enabled format |
 | `/doc/<slug>/<pk>.<fmt>` | one document, e.g. `/doc/invoice-standard/1.pdf` |
-| `/editors/` | the editor widget in every preset and skin, plus a custom toolbar (login required) |
+| `/editors/` | the editor widget in every preset and skin, a custom toolbar, and a Hebrew right-to-left editor with the text direction button (login required) |
 | `/my-letter/` | a page where a non-admin user writes a template and renders it for a chosen customer (login required) |
 | `/docs/` | this documentation, rendered from the repository's Markdown files |
 | `/admin/` | templates, blocks, constants, generated documents, and the demo's own records |

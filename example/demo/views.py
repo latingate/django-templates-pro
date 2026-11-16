@@ -47,7 +47,7 @@ def document(request, slug, pk, fmt):
 
 
 class GalleryForm(forms.Form):
-    """Four editors with different presets and skins, all bound to the invoice type."""
+    """Editors with different presets, skins and directions."""
 
     full_default = forms.CharField(label="preset='full', skin='default'", widget=TemplateEditorWidget(
         template_type="invoice", preset="full", skin="default", height=360))
@@ -63,6 +63,11 @@ class GalleryForm(forms.Form):
             template_type="order_confirmation", skin="compact", height=220,
             toolbar=["bold", "italic", "|", "bulletList", "|", "variable", "dynamic", ">",
                      "preview"]))
+    hebrew_rtl = forms.CharField(
+        label="Hebrew, direction='rtl': the text direction button (after the alignment buttons) "
+              "switches a paragraph between right to left and left to right",
+        widget=TemplateEditorWidget(template_type="customer_letter", preset="full", direction="rtl",
+                                    height=320))
 
 
 @login_required
@@ -74,6 +79,7 @@ def editor_gallery(request):
         "minimal_dark": "<p>Hello <span data-tp=\"var\" data-path=\"customer.name\">Customer</span>, "
                         "select some text to see the bubble menu, or type {{ to insert a field.</p>",
         "custom_compact": order_html,
+        "hebrew_rtl": (SAMPLES / "gallery" / "hebrew-letter.html").read_text(encoding="utf-8"),
     })
     return render(request, "demo/gallery.html", {"form": form})
 

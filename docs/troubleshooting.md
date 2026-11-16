@@ -88,5 +88,5 @@ python manage.py templates_pro_validate   # templates and blocks that no longer 
 | Symptom | Cause | Fix |
 |---|---|---|
 | A Hebrew document comes out left-to-right | direction is *Auto* and the locale is not Hebrew | set *Text direction* to *Right to left*, or *Locale* to `he_IL` |
-| An English line in a Hebrew document is left-aligned | each paragraph follows its first letter (intended) | start the paragraph with Hebrew, or align it with the toolbar |
+| An English line in a Hebrew document is left-aligned | each paragraph follows its first letter (intended) | start the paragraph with Hebrew, or set its direction with the text direction button |
 | The editor's toolbar stays left-to-right | the editor's interface is English only | nothing to fix; only the writing surface follows the direction |

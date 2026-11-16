@@ -201,7 +201,7 @@ python manage.py runserver
 | URL | What you'll see |
 |---|---|
 | <http://127.0.0.1:8000/> | **Sample Generated Documents**: every template rendered for real records, in each enabled format |
-| <http://127.0.0.1:8000/editors/> | the editor in all presets and skins, outside the admin |
+| <http://127.0.0.1:8000/editors/> | the editor in all presets and skins, and a Hebrew RTL editor with the text direction button, outside the admin |
 | <http://127.0.0.1:8000/my-letter/> | a user-facing page where a user writes and renders a template |
 | <http://127.0.0.1:8000/docs/> | the documentation (every `.md` file of the repository), in reading order |
 | <http://127.0.0.1:8000/admin/> | Document templates, Blocks, Constants, Generated documents (login admin / admin) |
@@ -546,7 +546,7 @@ A good first task is to integrate the package into one of your real projects
 | `UnicodeDecodeError: 'charmap' codec can't decode byte…` in `seed_demo` | old `seed_demo.py` read files with the Windows code page | use the fixed `seed_demo.py` / `views.py` (latest zip); optionally `setx PYTHONUTF8 1` |
 | `WeasyPrint could not import some external libraries` / `templates_pro.W001` | `PDF_ENGINE` is `"weasyprint"` but Pango is missing | remove `PDF_ENGINE` (default Typst), or install Pango (section 5, optional part) |
 | Hebrew document comes out left-to-right | locale not Hebrew and direction *Auto* | set the template's *Text direction* to *Right to left*, or its *Locale* to `he_IL` |
-| An English line in a Hebrew document is left-aligned | each paragraph follows its first letter (intended) | start the paragraph with Hebrew text, or align it explicitly with the toolbar |
+| An English line in a Hebrew document is left-aligned | each paragraph follows its first letter (intended) | start the paragraph with Hebrew text, or set its direction with the text direction button |
 | Custom theme looks plain in PDF | project theme has no Typst style | add a `"typst"` entry to the theme (see `docs/rendering.md#themes`) |
 | `.venv\Scripts\Activate.ps1 cannot be loaded… running scripts is disabled` | PowerShell execution policy | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` |
 | Editor doesn't appear (plain textarea or nothing) | static files not found | in the demo: check `DEBUG = True`; in production: run `collectstatic`; make sure `{{ form.media }}` is in your page's `<head>` |

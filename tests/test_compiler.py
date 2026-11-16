@@ -136,6 +136,19 @@ def test_allowed_formatting_survives():
     assert 'rel="noopener noreferrer"' in out
 
 
+
+@pytest.mark.parametrize("value,kept", [
+    ("rtl", 'dir="rtl"'), ("LTR", 'dir="ltr"'), ("auto", 'dir="auto"'),
+    ("rtl onclick=x", None), ("sideways", None), ("", None),
+])
+def test_dir_attribute_values(value, kept):
+    out = compile_html(f'<p dir="{value}">x</p><li dir="{value}">y</li>').source
+    if kept:
+        assert out.count(kept) == 2
+    else:
+        assert "dir=" not in out and "onclick" not in out
+
+
 def test_validate_recorded():
     assert validate_recorded({"invoice.lines[].qty"}, SCHEMA) == []
     assert validate_recorded({"invoice.lines[].nope"}, SCHEMA)

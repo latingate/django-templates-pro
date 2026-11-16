@@ -35,6 +35,9 @@ class El:
     tag: str
     attrs: dict = field(default_factory=dict)
     children: list = field(default_factory=list)  # El | str
+    #: Explicit direction ("ltr"/"rtl") from its own ``dir`` or the nearest ancestor's, else None
+    #: (then each paragraph follows its first letter).
+    dir: str | None = None
 
     def style(self) -> dict[str, str]:
         out = {}
@@ -56,6 +59,8 @@ class _TreeBuilder(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         el = El(tag.lower(), {k: v or "" for k, v in attrs})
+        own = el.attrs.get("dir", "").strip().lower()
+        el.dir = own if own in ("ltr", "rtl") else self.stack[-1].dir
         self.stack[-1].children.append(el)
         if el.tag not in _VOID:
             self.stack.append(el)
@@ -169,11 +174,12 @@ class _Converter:
             parent.append(OxmlElement(tag))
 
     # -- paragraphs ------------------------------------------------------
-    def new_paragraph(self, container, style: str | None = None, text: str | None = None):
+    def new_paragraph(self, container, style: str | None = None, text: str | None = None,
+                      dir: str | None = None):
         from .typst_pdf import first_strong
 
         p = container.add_paragraph()
-        own = first_strong(text) if text else None
+        own = dir or (first_strong(text) if text else None)
         p._tp_bidi = (own == "rtl") if own else self.rtl
         if style:
             try:
@@ -209,13 +215,13 @@ class _Converter:
         if align in mapping:
             p.alignment = mapping[align]
 
-    def blocks(self, container, children, *, list_level=0, list_kind=None, style=None):
-        """Convert a list of nodes; inline runs are gathered into paragraphs."""
+    def blocks(self, container, children, *, list_level=0, list_kind=None, style=None, dir=None):
+        """Convert a list of nodes; inline runs are gathered into paragraphs (direction ``dir``)."""
         pending: list = []
 
         def flush():
             if pending and any(not isinstance(n, str) or n.strip() for n in pending):
-                p = self.new_paragraph(container, style, _plain(pending))
+                p = self.new_paragraph(container, style, _plain(pending), dir)
                 self.inlines(p, pending, _Fmt())
             pending.clear()
 
@@ -231,11 +237,11 @@ class _Converter:
     def block(self, container, el: El, *, list_level=0, list_kind=None, style=None):
         tag = el.tag
         if tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
-            p = self.new_paragraph(container, f"Heading {tag[1]}", _plain(el.children))
+            p = self.new_paragraph(container, f"Heading {tag[1]}", _plain(el.children), el.dir)
             self.apply_block_style(p, el)
             self.inlines(p, el.children, _Fmt())
         elif tag == "p":
-            p = self.new_paragraph(container, style, _plain(el.children))
+            p = self.new_paragraph(container, style, _plain(el.children), el.dir)
             self.apply_block_style(p, el)
             self.inlines(p, el.children, _Fmt())
         elif tag in ("ul", "ol"):
@@ -245,7 +251,7 @@ class _Converter:
         elif tag == "li":
             self.list_item(container, el, list_level + 1, list_kind or "ul")
         elif tag == "blockquote":
-            self.blocks(container, el.children, style="Quote")
+            self.blocks(container, el.children, style="Quote", dir=el.dir)
         elif tag == "pre":
             p = self.new_paragraph(container, style)
             self.inlines(p, el.children, _Fmt(code=True), preserve_ws=True)
@@ -256,7 +262,7 @@ class _Converter:
             self.table(container, el)
         else:  # div, header, section...
             self.blocks(container, el.children, list_level=list_level, list_kind=list_kind,
-                        style=style)
+                        style=style, dir=el.dir)
 
     def list_item(self, container, li: El, level: int, kind: str):
         base = "List Number" if kind == "ol" else "List Bullet"
@@ -269,7 +275,7 @@ class _Converter:
                 inline.extend(c.children + [" "])
             else:
                 inline.append(c)
-        p = self.new_paragraph(container, style, _plain(inline))
+        p = self.new_paragraph(container, style, _plain(inline), li.dir)
         self.inlines(p, inline, _Fmt())
         for n in nested:
             for sub in n.children:
@@ -313,7 +319,7 @@ class _Converter:
                     cell = cell.merge(table.cell(ri, ci + span - 1))
                 # python-docx creates one empty paragraph per cell; reuse it.
                 first = cell.paragraphs[0]
-                self.blocks(cell, cell_el.children)
+                self.blocks(cell, cell_el.children, dir=cell_el.dir)
                 if len(cell.paragraphs) > 1 and not first.text and not first.runs:
                     first._element.getparent().remove(first._element)
                 if cell_el.tag == "th":

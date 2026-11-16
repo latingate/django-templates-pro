@@ -211,6 +211,9 @@
 /* Right-to-left documents: the writing surface flips, the editor's own UI stays as it is.
    Each paragraph follows its first letter, as in the rendered documents. */
 .tp-page .ProseMirror :is(p, li, h1, h2, h3, h4, h5, h6) { unicode-bidi: plaintext; }
+/* An explicit dir (the text direction button) wins over the first letter, inside it too. */
+.tp-page .ProseMirror :is([dir=ltr], [dir=rtl]),
+.tp-page .ProseMirror :is([dir=ltr], [dir=rtl]) :is(p, li, h1, h2, h3, h4, h5, h6) { unicode-bidi: isolate; }
 /* Chips show schema labels, not values: keep them out of the paragraph's direction choice. */
 .tp-chip { unicode-bidi: isolate; }
 .tp-status__dir { color: var(--tp-accent); font-weight: 600; }

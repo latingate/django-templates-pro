@@ -197,6 +197,12 @@ rule as CSS `unicode-bidi: plaintext`, and HTML, PDF and DOCX follow it
 alike. In the editor, chips don't count, because they show field labels and
 not the values.
 
+**The text direction button overrides that rule** for the selected
+paragraphs: a Hebrew sentence that starts with an English word ("PDF
+מצורף…") can be set to right to left, and it stays right to left in HTML,
+PDF and DOCX. A direction set on a list, quote or table cell applies to
+everything inside it. See [editor.md](editor.md#right-to-left-hebrew-arabic).
+
 Explicit alignment from the toolbar (left, centre, right) is kept as you see
 it in the editor, in every format.
 

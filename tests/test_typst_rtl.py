@@ -193,3 +193,53 @@ def test_english_paragraph_in_rtl_document_stays_ltr():
     src = typst_source("<p>4 Canal Wharf</p><p>שלום</p>", direction="rtl", lang="he")
     assert '#text(dir: ltr)[#"4 Canal Wharf"]' in src
     assert '#"שלום"' in src and "#text(dir: rtl)" not in src
+
+
+def test_explicit_dir_overrides_first_letter_in_typst():
+    src = typst_source('<p dir="rtl">Hello</p><p>World</p>', direction="ltr")
+    assert '#text(dir: rtl)[#"Hello"]' in src and '#text(dir: rtl)[#"World"]' not in src
+    src = typst_source('<p dir="ltr">שלום</p>', direction="rtl", lang="he")
+    assert '#text(dir: ltr)[#"שלום"]' in src
+
+
+def test_explicit_dir_is_inherited_in_typst():
+    src = typst_source('<blockquote dir="rtl"><p>Hello</p></blockquote>'
+                       '<ul dir="rtl"><li><p>Item</p></li></ul>', direction="ltr")
+    assert '#tp-quote[#text(dir: rtl)[#"Hello"]]' in src
+    assert '#text(dir: rtl)[#list([#text(dir: rtl)[#"Item"]])]' in src
+
+
+def test_dir_auto_keeps_the_first_letter_rule():
+    src = typst_source('<p dir="auto">Hello</p>', direction="rtl", lang="he")
+    assert '#text(dir: ltr)[#"Hello"]' in src
+
+
+def _docx_xml(body, direction):
+    from templates_pro.core.renderers.docx import DocxRenderer
+
+    return zipfile.ZipFile(io.BytesIO(DocxRenderer().render(
+        RenderInput(body_html=body, direction=direction)))).read("word/document.xml").decode()
+
+
+@pytest.mark.django_db
+def test_explicit_dir_in_docx():
+    ltr_doc = _docx_xml('<p dir="rtl">Hello</p><table><tbody><tr><td dir="rtl"><p>Cell</p></td>'
+                        '</tr></tbody></table>', "ltr")
+    assert ltr_doc.count("<w:bidi/>") == 2
+    rtl_doc = _docx_xml('<ul dir="ltr"><li><p>שלום</p></li></ul>', "rtl")
+    assert 'w:bidi w:val="0"' in rtl_doc
+
+
+def test_parse_html_inherits_dir():
+    root = parse_html('<div dir="rtl"><p>a</p><p dir="ltr">b</p><p dir="bogus">c</p></div><p>d</p>')
+    div, last = root.children
+    assert [p.dir for p in div.children] == ["rtl", "ltr", "rtl"]
+    assert div.dir == "rtl" and last.dir is None
+
+
+@pytest.mark.django_db
+def test_html_output_keeps_dir_and_override_css():
+    html = get_renderer("html").render(RenderInput(body_html='<p dir="rtl">Hello</p>'))
+    html = html.decode() if isinstance(html, bytes) else html
+    assert '<p dir="rtl">Hello</p>' in html
+    assert ":is([dir=ltr], [dir=rtl])" in html and "unicode-bidi: isolate" in html

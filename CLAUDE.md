@@ -65,7 +65,10 @@ Support matrix: **Python 3.10+, Django 4.2+**. Don't use 3.11+ syntax/stdlib
    renderers get `RenderInput.direction` = "ltr"/"rtl". Each paragraph follows its first strong
    letter (`typst_pdf.first_strong`) in Typst, DOCX (`w:bidi` on/off, explicit `w:val="0"` in RTL
    docs) and HTML (`unicode-bidi: plaintext`). In bidi DOCX paragraphs jc "left"/"right" are
-   logical, so the converter swaps them (verified in LibreOffice).
+   logical, so the converter swaps them (verified in LibreOffice). An explicit `dir="ltr|rtl"`
+   (editor `textDirection` button, `TpTextDirection` in extensions.js) wins over the first letter,
+   for the element and its descendants: `El.dir` in `parse_html` carries it down for Typst/DOCX;
+   HTML uses `unicode-bidi: isolate` for `[dir]` (base CSS + editor.css).
 6. **Migrations:** released migrations are never edited, only added. Generate with
    `python -c` + `tests.settings` (see below) and check they import on Django 4.2.
 7. Blocks are resolved **at render time** (single source of truth). Cache invalidation = version token
@@ -119,7 +122,6 @@ DJANGO_SETTINGS_MODULE=tests.settings python -c "import sys;sys.path[:0]=['.','s
 ## Roadmap / ideas (not done yet)
 
 - Editor UI translations (UI is English; documents can be RTL).
-- Per-paragraph direction override in the editor (today: first letter decides).
 - DOCX: RTL bullet/numbering placement not verified in Word (LibreOffice shows bullets on the left).
 - Template versions history / restore (only a version counter today).
 - Image upload endpoint for the editor (today: URL or pasted data URI).

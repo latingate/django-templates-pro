@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Text direction per paragraph.** A new toolbar button, `textDirection` (in the `full`
+  preset), switches the selected paragraphs between right to left and left to right, using
+  TipTap's built-in `setTextDirection` / `unsetTextDirection`. It stores `dir="rtl"`/`"ltr"` on
+  paragraphs, headings, lists, list items, quotes and table cells, and the direction wins over
+  the first-letter rule in HTML, PDF and DOCX (also inside lists, quotes and cells). The
+  compiler now keeps only `ltr`, `rtl` and `auto` as `dir` values.
+- Demo: `/editors/` has a Hebrew right-to-left editor with the text direction button.
 - Demo: the header link to the documents page reads "Sample Documents", and the page's heading
   "Sample Generated Documents".
 

@@ -31,4 +31,5 @@ export const icons = {
   repeat: svg('<path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/>'),
   condition: svg('<path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 1 3 3v6"/><path d="M18 3v6"/><circle cx="18" cy="3" r="0.5"/>'),
   plus: svg('<path d="M12 5v14M5 12h14"/>'),
+  textDirection: svg('<path d="M14 3v11M18 3v11M19 3h-7.5a3.5 3.5 0 0 0 0 7H14"/><path d="M4 19h16M7 16l-3 3 3 3M17 16l3 3-3 3"/>'),
 }

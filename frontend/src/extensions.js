@@ -124,6 +124,41 @@ export const TpVariable = chipNode({ name: 'tpVariable', kind: 'var', keyAttr: '
 export const TpConstant = chipNode({ name: 'tpConstant', kind: 'const', keyAttr: 'key', keyData: 'data-key' })
 export const TpDynamic = chipNode({ name: 'tpDynamic', kind: 'dynamic', keyAttr: 'key', keyData: 'data-key' })
 
+// Text direction. TipTap's core TextDirection extension supplies the setTextDirection /
+// unsetTextDirection commands, but it declares `dir` only when the editor has a global
+// direction, and then writes dir="…" on every node. Declare it here on the blocks the
+// renderers honour, with no default, so only an explicit choice is stored.
+export const DIR_TYPES = ['paragraph', 'heading', 'blockquote', 'bulletList', 'orderedList', 'listItem', 'tableCell', 'tableHeader']
+
+export const TpTextDirection = Extension.create({
+  name: 'tpTextDirection',
+  addGlobalAttributes() {
+    return [{
+      types: DIR_TYPES,
+      attributes: {
+        dir: {
+          default: null,
+          parseHTML: (el) => {
+            const dir = (el.getAttribute('dir') || '').trim().toLowerCase()
+            return dir === 'ltr' || dir === 'rtl' ? dir : null
+          },
+          renderHTML: (a) => (a.dir ? { dir: a.dir } : {}),
+        },
+      },
+    }]
+  },
+})
+
+// Same letters as typst_pdf._RTL_CHARS: a paragraph without `dir` follows its first letter.
+const RTL_CHARS = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFC]/
+export const firstStrong = (text) => {
+  for (const ch of text || '') {
+    if (RTL_CHARS.test(ch)) return 'rtl'
+    if (/\p{L}/u.test(ch)) return 'ltr'
+  }
+  return null
+}
+
 export const TpBlock = Node.create({
   name: 'tpBlock',
   group: 'block',

@@ -61,7 +61,7 @@ Project-wide defaults go in `TEMPLATES_PRO["EDITOR"]`, e.g.
 ### Toolbar items
 
 `undo redo blockType fontSize bold italic underline strike color highlight
-clear alignLeft alignCenter alignRight alignJustify bulletList orderedList
+clear alignLeft alignCenter alignRight alignJustify textDirection bulletList orderedList
 blockquote hr link image table variable constant dynamic block repeat
 condition insert preview fullscreen`
 
@@ -105,6 +105,17 @@ TemplateEditorWidget(type_field="kind", direction_field="direction", locale_fiel
 Each paragraph takes the direction of its first letter, exactly as in the
 rendered documents; chips (field labels) don't count. The editor's own
 toolbar, menus and popovers stay left-to-right and in English.
+
+**Text direction button** (`textDirection`, in the `full` preset after the
+alignment buttons): switches the selected paragraphs between right to left
+and left to right, for a line whose first letter gives the wrong direction,
+such as a Hebrew sentence that starts with "PDF". It is highlighted when the
+paragraph has its own direction. Switching back to the direction the first
+letter gives removes the override. It uses TipTap's built-in
+`setTextDirection` / `unsetTextDirection` commands and stores `dir="rtl"` or
+`dir="ltr"` on the paragraph, heading, list, list item, quote or table cell
+([html-contract.md](html-contract.md)). The `/editors/` page of the demo has a
+Hebrew example.
 
 ## Styling
 

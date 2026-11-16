@@ -299,6 +299,10 @@ class _Compiler(HTMLParser):
             elif name == "target":
                 if value != "_blank":
                     continue
+            elif name == "dir":
+                value = value.strip().lower()
+                if value not in ("ltr", "rtl", "auto"):
+                    continue
             elif name in ("colspan", "rowspan", "span", "start", "width", "height", "colwidth"):
                 if not re.match(r"^[0-9,]{1,10}$", value):
                     continue

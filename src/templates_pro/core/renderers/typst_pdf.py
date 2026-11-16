@@ -229,9 +229,10 @@ class TypstWriter:
         self.direction = direction
         self.images = 0
 
-    def directed(self, text: str, body: str) -> str:
-        """Give a paragraph the direction of its first letter when it differs from the document's."""
-        own = first_strong(text)
+    def directed(self, text: str, body: str, dir: str | None = None) -> str:
+        """Give a paragraph its explicit direction (``dir``) or, without one, the direction of its
+        first letter, when that differs from the document's."""
+        own = dir or first_strong(text)
         if own and own != self.direction:
             return f"#text(dir: {own})[{body}]"
         return body
@@ -328,7 +329,8 @@ class TypstWriter:
         return f'#box(image("{name}"{size}))'
 
     # -- blocks --------------------------------------------------------------
-    def blocks(self, nodes) -> str:
+    def blocks(self, nodes, dir: str | None = None) -> str:
+        """Convert block nodes; loose inline runs become paragraphs with direction ``dir``."""
         out: list[str] = []
         pending: list = []
 
@@ -337,7 +339,7 @@ class TypstWriter:
             if items:
                 text = self.inline(items)
                 if text:
-                    out.append(self.directed("".join(_text_of(i) for i in items), text))
+                    out.append(self.directed("".join(_text_of(i) for i in items), text, dir))
             pending.clear()
 
         for node in nodes:
@@ -365,34 +367,38 @@ class TypstWriter:
             body = self.inline(_trim(el.children))
             if not body:
                 return "#v(0.5em)"
-            return self.aligned(el, self.directed(_text_of(el), body))
+            return self.aligned(el, self.directed(_text_of(el), body, el.dir))
         if tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
             level = min(int(tag[1]), 4)
             body = self.inline(_trim(el.children))
             if not body:
                 return ""
-            return self.aligned(el, self.directed(_text_of(el), f"#heading(level: {level})[{body}]"))
+            return self.aligned(el, self.directed(_text_of(el), f"#heading(level: {level})[{body}]",
+                                                  el.dir))
         if tag in ("ul", "ol"):
             items = [c for c in el.children if isinstance(c, El) and c.tag == "li"]
             if not items:
                 return ""
-            parts = ", ".join(f"[{self.blocks(li.children)}]" for li in items)
+            parts = ", ".join(f"[{self.blocks(li.children, li.dir)}]" for li in items)
             if tag == "ol":
                 start = el.attrs.get("start")
                 start_arg = f"start: {int(start)}, " if start and start.isdigit() else ""
-                return f"#enum({start_arg}{parts})"
-            return f"#list({parts})"
+                body = f"#enum({start_arg}{parts})"
+            else:
+                body = f"#list({parts})"
+            # A list with its own direction puts its markers on that side.
+            return f"#text(dir: {el.dir})[{body}]" if el.dir and el.dir != self.direction else body
         if tag == "li":
-            return self.blocks(el.children)
+            return self.blocks(el.children, el.dir)
         if tag == "blockquote":
-            return f"#tp-quote[{self.blocks(el.children)}]"
+            return f"#tp-quote[{self.blocks(el.children, el.dir)}]"
         if tag == "pre":
             return "#text(dir: ltr)[#raw(" + tstr(_text_of(el)) + ", block: true)]"
         if tag == "hr":
             return "#tp-hr()"
         if tag == "table":
             return self.table(el)
-        return self.blocks(el.children)
+        return self.blocks(el.children, el.dir)
 
     def table(self, el: El) -> str:
         rows: list[El] = []
@@ -432,7 +438,7 @@ class TypstWriter:
         columns = "(" + ", ".join(f"{w}fr" for w in weights) + ("," if ncols == 1 else "") + ")"
 
         def cell(c: El, in_header: bool) -> str:
-            body = self.blocks(c.children)
+            body = self.blocks(c.children, c.dir)
             if c.tag == "th":
                 body = f"#tp-th[{body}]" if in_header else f"#strong[{body}]"
             args = []

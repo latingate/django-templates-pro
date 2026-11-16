@@ -37,11 +37,11 @@ const extensions = [
   TextStyle, Color, FontSize, Highlight.configure({ multicolor: true }),
   TextAlign.configure({ types: ['heading', 'paragraph'] }), Image.configure({ allowBase64: true }),
   Table.configure({ resizable: false }), ext.TpTableRow, TableHeader, TableCell,
-  ext.TpVariable, ext.TpConstant, ext.TpDynamic, ext.TpBlock, ext.TpRepeat, ext.TpIf,
+  ext.TpVariable, ext.TpConstant, ext.TpDynamic, ext.TpBlock, ext.TpRepeat, ext.TpIf, ext.TpTextDirection,
 ]
 
 let n = 0
-for (const kind of ['templates', 'blocks']) {
+for (const kind of ['templates', 'blocks', 'gallery']) {
   for (const file of readdirSync(join(samples, kind)).filter((f) => f.endsWith('.html'))) {
     const src = readFileSync(join(samples, kind, file), 'utf8')
     const editor = new Editor({ extensions, content: src, element: document.createElement('div') })

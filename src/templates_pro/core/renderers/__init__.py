@@ -78,6 +78,13 @@ BASE_CSS = """
 .tp-document p, .tp-document li, .tp-document h1, .tp-document h2, .tp-document h3,
 .tp-document h4, .tp-document h5, .tp-document h6, .tp-running-header p,
 .tp-running-footer p { unicode-bidi: plaintext; }
+/* An explicit dir="ltr"/"rtl" (the editor's text direction button) wins over the first
+   letter, for the element and everything inside it. */
+:is(.tp-document, .tp-running-header, .tp-running-footer) :is([dir=ltr], [dir=rtl]),
+:is(.tp-document, .tp-running-header, .tp-running-footer) :is([dir=ltr], [dir=rtl])
+  :is(p, li, h1, h2, h3, h4, h5, h6) { unicode-bidi: isolate; }
+.tp-document :is(ul, ol)[dir=rtl] { padding-left: 0; padding-right: 1.6em; }
+.tp-document :is(ul, ol)[dir=ltr] { padding-right: 0; padding-left: 1.6em; }
 """
 
 PRINT_CSS = """

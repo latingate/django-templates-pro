@@ -8,14 +8,14 @@ import { Table, TableCell, TableHeader } from '@tiptap/extension-table'
 import { Placeholder } from '@tiptap/extensions'
 import BubbleMenu from '@tiptap/extension-bubble-menu'
 
-import { TpVariable, TpConstant, TpDynamic, TpBlock, TpRepeat, TpIf, TpTableRow, BraceTrigger } from './extensions.js'
+import { TpVariable, TpConstant, TpDynamic, TpBlock, TpRepeat, TpIf, TpTableRow, BraceTrigger, TpTextDirection, firstStrong } from './extensions.js'
 import { icons } from './icons.js'
 
 export const PRESETS = {
   full: [
     'undo', 'redo', '|', 'blockType', 'fontSize', '|',
     'bold', 'italic', 'underline', 'strike', 'color', 'highlight', 'clear', '|',
-    'alignLeft', 'alignCenter', 'alignRight', 'alignJustify', '|',
+    'alignLeft', 'alignCenter', 'alignRight', 'alignJustify', 'textDirection', '|',
     'bulletList', 'orderedList', 'blockquote', 'hr', '|', 'link', 'image', 'table', '/',
     'variable', 'constant', 'dynamic', 'block', 'repeat', 'condition', '>', 'preview', 'fullscreen',
   ],
@@ -117,6 +117,7 @@ export class TemplateEditor {
       FontSize,
       Highlight.configure({ multicolor: true }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      TpTextDirection,
       Image.configure({ allowBase64: true }),
       Table.configure({ resizable: false }),
       TpTableRow,
@@ -227,6 +228,26 @@ export class TemplateEditor {
       (this.config.formats && this.config.formats.locale) || ''
     const lang = String(Array.isArray(loc) ? loc[0] : loc).replace('-', '_').split('_')[0].toLowerCase()
     return (this.config.rtlLanguages || ['he', 'ar', 'fa', 'ur', 'yi']).includes(lang) ? 'rtl' : 'ltr'
+  }
+
+  // Explicit direction of the block at the cursor (its own or a container's), or null.
+  blockDir() {
+    const { $from } = this.editor.state.selection
+    for (let d = $from.depth; d > 0; d--) {
+      const dir = $from.node(d).attrs.dir
+      if (dir) return dir
+    }
+    return null
+  }
+
+  // Flip the selected paragraphs between right to left and left to right. Going back to what
+  // the first letter (or the document) gives removes `dir`, so only real overrides are stored.
+  toggleTextDirection() {
+    const { $from } = this.editor.state.selection
+    const natural = firstStrong($from.parent.textContent) || this._dir || 'ltr'
+    const next = (this.blockDir() || natural) === 'rtl' ? 'ltr' : 'rtl'
+    const chain = this.editor.chain().focus()
+    ;(next === natural ? chain.unsetTextDirection() : chain.setTextDirection(next)).run()
   }
 
   applyDirection() {
@@ -427,6 +448,7 @@ export class TemplateEditor {
       alignLeft: () => this.button('alignLeft', { icon: icons.alignLeft, label: 'Align left', run: () => ed().setTextAlign('left').run(), active: () => this.editor.isActive({ textAlign: 'left' }) }),
       alignCenter: () => this.button('alignCenter', { icon: icons.alignCenter, label: 'Center', run: () => ed().setTextAlign('center').run(), active: () => this.editor.isActive({ textAlign: 'center' }) }),
       alignRight: () => this.button('alignRight', { icon: icons.alignRight, label: 'Align right', run: () => ed().setTextAlign('right').run(), active: () => this.editor.isActive({ textAlign: 'right' }) }),
+      textDirection: () => this.button('textDirection', { icon: icons.textDirection, label: 'Text direction', title: 'Text direction: switch the paragraph between right to left and left to right', run: () => this.toggleTextDirection(), active: () => !!this.blockDir() }),
       alignJustify: () => this.button('alignJustify', { icon: icons.alignJustify, label: 'Justify', run: () => ed().setTextAlign('justify').run(), active: () => this.editor.isActive({ textAlign: 'justify' }) }),
       bulletList: () => this.button('bulletList', { icon: icons.bulletList, label: 'Bullet list', run: () => ed().toggleBulletList().run(), active: () => this.editor.isActive('bulletList') }),
       orderedList: () => this.button('orderedList', { icon: icons.orderedList, label: 'Numbered list', run: () => ed().toggleOrderedList().run(), active: () => this.editor.isActive('orderedList') }),
