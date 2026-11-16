@@ -109,9 +109,6 @@ def test_every_doc_is_listed_and_its_links_resolve():
                 full = path
             else:
                 full = posixpath.normpath(posixpath.join(posixpath.dirname(doc.path), path)) if path else doc.path
-            if full in docs_module.HIDDEN:
-                assert (REPO / full).is_file(), f"{doc.path}: link to {target}: no such file"
-                continue
             assert full in paths, f"{doc.path}: link to {target} leaves the documentation"
             assert not anchor or anchor in anchors[full], f"{doc.path}: no heading for {target}"
 

@@ -2,8 +2,7 @@
 
 ## Unreleased
 
-- Docs: `docs/releasing.md`, how to publish a new version to PyPI (maintainers: linked from
-  `docs/index.md`, not shown in the demo's `/docs/` or the README).
+- Docs: `docs/releasing.md`, how to publish a new version to PyPI (not in the README table).
 - Demo: removed old logo and favicon backups that shipped in 0.3.0.
 
 ## 0.3.0 — 2026-11-12
