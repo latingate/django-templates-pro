@@ -10,3 +10,6 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# Machine-specific: Python interpreter (SDK) name
+/django-templates-pro.iml
+/misc.xml
